@@ -1,5 +1,4 @@
 akinsho
-storageclass
 atmega
 augroup
 autocmd
@@ -37,6 +36,7 @@ gopls
 hrsh
 isort
 jayp
+jdtls
 keymap
 keymaps
 kyazdani
@@ -79,6 +79,7 @@ splitbelow
 splitright
 startuptime
 stevearc
+storageclass
 stylua
 sumneko
 taplo
