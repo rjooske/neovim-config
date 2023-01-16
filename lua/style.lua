@@ -18,7 +18,7 @@ M.opt = {
 ---@param len integer
 ---@return string
 local leadmultispace = function(len)
-	return "|" .. ("-"):rep(len - 1)
+	return "|" .. string.rep(" ", len - 1)
 end
 
 ---@class Listchars
@@ -31,9 +31,9 @@ end
 ---@return Listchars
 M.listchars = function(tab_size)
 	return {
-		tab = ">-",
+		tab = "> ",
 		trail = "-",
-		nbsp = "+",
+		nbsp = "~",
 		leadmultispace = leadmultispace(tab_size),
 	}
 end
