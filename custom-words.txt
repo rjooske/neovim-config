@@ -44,12 +44,14 @@ kylechui
 laststatus
 leadmultispace
 listchars
+liststyle
 lspconfig
 lspkind
 lualine
 mapleader
 menuone
 neovim
+netrw
 noautocmd
 noinsert
 noselect
