@@ -24,6 +24,7 @@ vim.keymap.set("n", "<leader>bd", function()
 	local force = buftype == "terminal"
 	require("bufdelete").bufdelete(0, force)
 end)
+vim.keymap.set("n", "<leader>bs", ":BufferLineSortByDirectory<cr>", { silent = true })
 vim.keymap.set("n", "H", ":BufferLineCyclePrev<cr>", { silent = true })
 vim.keymap.set("n", "L", ":BufferLineCycleNext<cr>", { silent = true })
 vim.keymap.set("n", "<c-h>", ":wincmd h<cr>", { silent = true })
@@ -365,6 +366,7 @@ require("nvim-treesitter.configs").setup({
 		"jsonc",
 		"lua",
 		"make",
+		"markdown",
 		"proto",
 		"python",
 		"rust",
