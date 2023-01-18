@@ -286,21 +286,6 @@ local function ok_parameters_to_string(s)
 	return table.concat(lines, "\n")
 end
 
----@param s OkSignature
----@return string
-local function ok_signature_to_string(s)
-	---@type string[]
-	local lines = {}
-	if s.documentation ~= nil then
-		table.insert(lines, s.documentation)
-	end
-	if #s.parameters > 0 then
-		table.insert(lines, ok_parameters_to_string(s))
-	end
-	table.insert(lines, s.label)
-	return table.concat(lines, "\n")
-end
-
 ---@param sh OkSignatureHelp
 ---@return string[]
 local function ok_signature_help_labels(sh)
@@ -317,8 +302,16 @@ local function ok_signature_help_labels(sh)
 end
 
 ---@param sh OkSignatureHelp
+---@return string
 local function ok_signature_help_to_string(sh)
 	local active = sh.signatures[sh.active_signature_index]
+	local params = ok_parameters_to_string(active)
+	local labels = ok_signature_help_labels(sh)
+	if active.documentation ~= nil then
+		return active.documentation .. "\n" .. params .. "\n" .. table.concat(labels, "\n")
+	else
+		return params .. "\n" .. table.concat(labels, "\n")
+	end
 end
 
 local function log_env(f)
@@ -334,7 +327,7 @@ local function log_env(f)
 	vim.notify(text)
 end
 
-vim.keymap.set("n", "<c-k>", function()
+vim.keymap.set("i", "<c-k>", function()
 	log_env(function(log)
 		local req = vim.lsp.util.make_position_params(0)
 		local res = vim.lsp.buf_request_sync(0, "textDocument/signatureHelp", req)

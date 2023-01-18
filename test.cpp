@@ -1,7 +1,6 @@
 // Void to void
 void foo();
 
-// Int to void
 void foo(int);
 
 // Int and double to int
