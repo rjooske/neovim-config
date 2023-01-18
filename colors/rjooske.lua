@@ -59,7 +59,7 @@ local highlights = {
 	{ "@field", { ctermfg = 11 } },
 	{ "@property", { ctermfg = 11 } },
 
-	{ "@namespace", { ctermfg = 6 } },
+	{ "@namespace", { ctermfg = 14 } },
 
 	{ "Function", { ctermfg = 10 } },
 
