@@ -1,5 +1,8 @@
 vim.cmd.colorscheme("rjooske")
 
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 3
+
 vim.g.mapleader = " "
 
 vim.keymap.set("n", "<leader>w", ":w<cr>", { silent = true, desc = "Save" })

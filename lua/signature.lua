@@ -4,10 +4,10 @@ local M = {}
 ---@param arr T[]
 ---@param f fun(t: T): U
 ---@return U[]
-local function map(arr, f)
+local function array_map(arr, f)
 	local res = {}
-	for _, v in ipairs(arr) do
-		table.insert(res, f(v))
+	for i, v in ipairs(arr) do
+		res[i] = f(v)
 	end
 	return res
 end
@@ -84,13 +84,19 @@ local example2 = {
 
 -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_signatureHelp
 
+---@alias MarkupKind "plaintext" | "markdown"
+
+---@class MarkupContent
+---@field kind MarkupKind
+---@field value string
+
 ---@class ParameterInformation
 ---@field label string | integer[]
----@field documentation? string
+---@field documentation? string | MarkupContent
 
 ---@class SignatureInformation
 ---@field label string
----@field documentation? string
+---@field documentation? string | MarkupContent
 ---@field parameters? ParameterInformation[]
 ---@field activeParameter? integer
 
@@ -114,6 +120,11 @@ local example2 = {
 ---@field parameters OkParameter[]
 ---@field documentation? string
 
+---@class OkSignatureHelp
+---@field signatures OkSignature[]
+---@field active_signature_index integer 1-indexed
+---@field active_parameter_index integer 1-indexed
+
 ---@class OkStateIdle
 ---@field kind "idle"
 
@@ -122,15 +133,9 @@ local example2 = {
 
 ---@class OkStateAvailable
 ---@field kind "available"
----@field signatures OkSignature[]
----@field active_signature_index integer 1-indexed
----@field active_parameter_index integer 1-indexed
+---@field help OkSignatureHelp
 
 ---@alias OkState OkStateIdle | OkStateWaiting | OkStateAvailable
-
----@class HiString
----@field hl_group string
----@field value string
 
 ---@param si SignatureInformation
 ---@param pi ParameterInformation
@@ -145,13 +150,27 @@ local function new_ok_parameter_label_range(si, pi)
 	end
 end
 
+---@param pi ParameterInformation
+---@return string?
+local function new_ok_parameter_documentation(pi)
+	local doc = pi.documentation
+	if doc == nil then
+		return nil
+	end
+	if type(doc) == "string" then
+		return doc
+	else
+		return doc.value
+	end
+end
+
 ---@param si SignatureInformation
 ---@param pi ParameterInformation
 ---@return OkParameter
 local function new_ok_parameter(si, pi)
 	return {
 		label_range = new_ok_parameter_label_range(si, pi),
-		documentation = pi.documentation,
+		documentation = new_ok_parameter_documentation(pi),
 	}
 end
 
@@ -166,12 +185,26 @@ local function new_ok_parameters(si)
 end
 
 ---@param si SignatureInformation
+---@return string?
+local function new_ok_signature_documentation(si)
+	local doc = si.documentation
+	if doc == nil then
+		return nil
+	end
+	if type(doc) == "string" then
+		return doc
+	else
+		return doc.value
+	end
+end
+
+---@param si SignatureInformation
 ---@return OkSignature
 local function new_ok_signature(si)
 	return {
 		label = si.label,
 		parameters = new_ok_parameters(si),
-		documentation = si.documentation,
+		documentation = new_ok_signature_documentation(si),
 	}
 end
 
@@ -225,29 +258,102 @@ local function new_ok_state_available(sh)
 	---@cast api -nil
 	return {
 		kind = "available",
-		signatures = new_ok_signatures(sh),
-		active_signature_index = asi,
-		active_parameter_index = api,
+		help = {
+			signatures = new_ok_signatures(sh),
+			active_signature_index = asi,
+			active_parameter_index = api,
+		},
 	}
 end
 
 ---@param s OkSignature
 ---@param p OkParameter
----@return HiString[]
-local function ok_parameter_to_hi_strings(s, p)
-	return {
-		hl_group = "OkSignatureParameter",
-		value = string.sub(s.label, p.label_range),
-	}
+---@return string
+local function ok_parameter_to_string(s, p)
+	local label = string.sub(s.label, p.label_range.first, p.label_range.last)
+	local doc = p.documentation and " " .. p.documentation or ""
+	return label .. doc
+end
+
+---@param s OkSignature
+---@return string
+local function ok_parameters_to_string(s)
+	---@type string[]
+	local lines = {}
+	for _, p in ipairs(s.parameters) do
+		table.insert(lines, ok_parameter_to_string(s, p))
+	end
+	return table.concat(lines, "\n")
+end
+
+---@param s OkSignature
+---@return string
+local function ok_signature_to_string(s)
+	---@type string[]
+	local lines = {}
+	if s.documentation ~= nil then
+		table.insert(lines, s.documentation)
+	end
+	if #s.parameters > 0 then
+		table.insert(lines, ok_parameters_to_string(s))
+	end
+	table.insert(lines, s.label)
+	return table.concat(lines, "\n")
+end
+
+---@param sh OkSignatureHelp
+---@return string[]
+local function ok_signature_help_labels(sh)
+	---@type string[]
+	local res = {}
+	for i, s in ipairs(sh.signatures) do
+		if i == sh.active_signature_index then
+			table.insert(res, "[ " .. s.label .. " ]")
+		else
+			table.insert(res, s.label)
+		end
+	end
+	return res
+end
+
+---@param sh OkSignatureHelp
+local function ok_signature_help_to_string(sh)
+	local active = sh.signatures[sh.active_signature_index]
+end
+
+local function log_env(f)
+	local text = ""
+	local function log(v)
+		if type(v) == "string" then
+			text = text .. v .. "\n"
+		else
+			text = text .. vim.inspect(v) .. "\n"
+		end
+	end
+	f(log)
+	vim.notify(text)
 end
 
 vim.keymap.set("n", "<c-k>", function()
-	local req = vim.lsp.util.make_position_params(0)
-	local res = vim.lsp.buf_request_sync(0, "textDocument/signatureHelp", req)
-	vim.notify(vim.inspect(res))
-	for _, r in pairs(res) do
-		vim.notify(vim.inspect(new_ok_state_available(r.result)))
-	end
+	log_env(function(log)
+		local req = vim.lsp.util.make_position_params(0)
+		local res = vim.lsp.buf_request_sync(0, "textDocument/signatureHelp", req)
+		log("res:")
+		log(res)
+		for i, r in pairs(res) do
+			local st = new_ok_state_available(r.result)
+			log("state " .. i .. ":")
+			log(st)
+			if st ~= nil then
+				log("help " .. i .. ":")
+				log(ok_signature_help_to_string(st.help))
+				-- for j, sig in ipairs(st.help.signatures) do
+				-- 	log("signature #" .. j .. ":")
+				-- 	log(ok_signature_to_string(sig))
+				-- end
+			end
+		end
+	end)
 end)
 
 return M
