@@ -492,9 +492,7 @@ telescope.setup({
   defaults = {
     file_ignore_patterns = { "^%.git/" },
     mappings = {
-      i = {
-        ["<esc>"] = actions.close,
-      },
+      i = { ["<esc>"] = actions.close },
     },
   },
   pickers = {
@@ -518,12 +516,12 @@ telescope.load_extension("fzf")
 
 local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>o", builtin.find_files, { desc = "Find files" })
-vim.keymap.set(
-  "n",
-  "<leader>O",
-  builtin.oldfiles,
-  { desc = "Recently opened files" }
-)
+vim.keymap.set("n", "<leader>fo", function()
+  require("telescope.builtin").oldfiles({ only_cwd = true })
+end, { desc = "Recently opened files in current directory" })
+vim.keymap.set("n", "<leader>O", function()
+  require("telescope.builtin").oldfiles({ only_cwd = false })
+end, { desc = "Recently opened files" })
 vim.keymap.set("n", "<leader>fq", builtin.quickfix, { desc = "Open quickfix" })
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Grep CWD" })
 vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Grep buffers" })
@@ -547,6 +545,7 @@ vim.keymap.set(
   { desc = "Query for workspace symbols" }
 )
 vim.keymap.set("n", "<leader>:", builtin.command_history, {})
+vim.keymap.set("n", "<leader>fu", builtin.resume, {})
 
 local hop = require("hop")
 local hop_hint = require("hop.hint")
