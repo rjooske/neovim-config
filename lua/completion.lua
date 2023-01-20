@@ -27,14 +27,14 @@ local feedkeys = function(keys)
 end
 
 M.setup = function()
-  vim.keymap.set({ "i", "s" }, "<s-tab>", function()
+  vim.keymap.set({ "n", "i", "s" }, "<s-tab>", function()
     if snippy.can_jump(-1) then
       snippy_mapping.previous()()
     else
       feedkeys("<s-tab>")
     end
   end)
-  vim.keymap.set({ "i", "s" }, "<tab>", function()
+  vim.keymap.set({ "n", "i", "s" }, "<tab>", function()
     if snippy.can_jump(1) then
       snippy_mapping.next()()
     else
