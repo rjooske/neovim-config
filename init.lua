@@ -3,36 +3,11 @@ vim.cmd.colorscheme("rjooske")
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
 
-vim.g.mapleader = " "
-
-vim.keymap.set("n", "<leader>w", ":w<cr>", { silent = true, desc = "Save" })
-vim.keymap.set(
-  "n",
-  "<leader>W",
-  ":noautocmd w<cr>",
-  { silent = true, desc = "Save without formatting" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>q",
-  ":close<cr>",
-  { silent = true, desc = "Close window except last one" }
-)
-vim.keymap.set(
-  "n",
-  "<leader><leader>q",
-  ":q<cr>",
-  { silent = true, desc = "Close window" }
-)
-vim.keymap.set(
-  "n",
-  "<leader><leader><leader>q",
-  ":cq<cr>",
-  { silent = true, desc = "Exit with error code" }
-)
-vim.keymap.set("n", "<esc>", function()
-  vim.cmd("noh")
-end)
+vim.g.mapleader = require("keymap").leader
+for _, v in ipairs(require("keymap").keymaps) do
+  local opts = { silent = true, desc = v.desc }
+  vim.keymap.set(v.mode, v.lhs, v.rhs, opts)
+end
 
 vim.keymap.set(
   { "n", "v" },
@@ -227,7 +202,7 @@ local on_attach = function(client, bufnr)
     vim.keymap.set(mode, lhs, rhs, opts)
   end
 
-  if client.supports_method("textDocument/formatting") then
+  if client.name == "null-ls" then
     map("n", "<leader>lf", function()
       format(bufnr)
     end, { desc = "Format" })
@@ -508,39 +483,6 @@ telescope.setup({
   },
 })
 telescope.load_extension("fzf")
-
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>o", builtin.find_files, { desc = "Find files" })
-vim.keymap.set("n", "<leader>fo", function()
-  require("telescope.builtin").oldfiles({ only_cwd = true })
-end, { desc = "Recently opened files in current directory" })
-vim.keymap.set("n", "<leader>O", function()
-  require("telescope.builtin").oldfiles({ only_cwd = false })
-end, { desc = "Recently opened files" })
-vim.keymap.set("n", "<leader>fq", builtin.quickfix, { desc = "Open quickfix" })
-vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Grep CWD" })
-vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Grep buffers" })
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help" })
-vim.keymap.set(
-  "n",
-  "<leader>fs",
-  builtin.current_buffer_fuzzy_find,
-  { desc = "Fuzzy find in current buffer" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>fd",
-  builtin.diagnostics,
-  { desc = "Fuzzy find diagnostics" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>fy",
-  builtin.lsp_dynamic_workspace_symbols,
-  { desc = "Query for workspace symbols" }
-)
-vim.keymap.set("n", "<leader>:", builtin.command_history, {})
-vim.keymap.set("n", "<leader>fu", builtin.resume, {})
 
 local hop = require("hop")
 local hop_hint = require("hop.hint")
