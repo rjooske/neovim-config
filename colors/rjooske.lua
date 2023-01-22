@@ -70,6 +70,9 @@ local highlights = {
   { "@tag.delimiter", { ctermfg = 8 } },
   { "@tag.attribute", { link = "@field" } },
 
+  { "@parameter.help", { link = "Number" } },
+  { "@text.reference.help", { ctermfg = 12 } },
+
   { "CmpNormal", { bold = true } },
   { "CmpCursorLine", { standout = true } },
   { "CmpItemAbbr", { bold = true } },

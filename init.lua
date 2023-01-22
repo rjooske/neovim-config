@@ -142,8 +142,6 @@ require("packer").startup(function(use)
 
   use("dstein64/vim-startuptime")
 
-  use("williamboman/mason.nvim")
-  use("williamboman/mason-lspconfig.nvim")
   use("neovim/nvim-lspconfig")
 
   use({
@@ -195,8 +193,6 @@ require("packer").startup(function(use)
     tag = "*", -- Use for stability; omit to use `main` branch for the latest features
   })
 
-  use("folke/which-key.nvim")
-
   use("lewis6991/gitsigns.nvim")
 
   use({
@@ -211,8 +207,6 @@ require("packer").startup(function(use)
     requires = { "kyazdani42/nvim-web-devicons" },
   })
 end)
-
-require("mason").setup({ ui = { border = "rounded" } })
 
 local format = function(bufnr)
   vim.lsp.buf.format({
@@ -270,10 +264,10 @@ local on_attach = function(client, bufnr)
   end, { desc = "Go to the previous diagnostic" })
   map("n", "K", vim.lsp.buf.hover, {})
   map("n", "gD", vim.lsp.buf.declaration, {})
-  map("n", "gd", vim.lsp.buf.definition, {})
-  map("n", "gi", vim.lsp.buf.implementation, {})
-  map("n", "gr", vim.lsp.buf.references, {})
-  map("n", "<space>D", vim.lsp.buf.type_definition, {})
+  map("n", "gd", require("telescope.builtin").lsp_definitions, {})
+  map("n", "gi", require("telescope.builtin").lsp_implementations, {})
+  map("n", "gr", require("telescope.builtin").lsp_references, {})
+  map("n", "<space>D", require("telescope.builtin").lsp_type_definitions, {})
   map("n", "<space>rn", vim.lsp.buf.rename, {})
   map("n", "<space>ca", vim.lsp.buf.code_action, {})
 end
@@ -425,6 +419,7 @@ require("nvim-treesitter.configs").setup({
     "javascript",
     "json",
     "jsonc",
+    "latex",
     "lua",
     "make",
     "markdown",
@@ -645,5 +640,3 @@ require("lualine").setup({
 })
 
 require("completion").setup()
-
-require("which-key").setup()

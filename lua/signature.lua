@@ -12,6 +12,15 @@ local function array_map(arr, f)
   return res
 end
 
+---@generic T, U
+---@param t table<T, U>
+---@return U
+local function table_first_value(t)
+  for _, v in pairs(t) do
+    return v
+  end
+end
+
 ---@generic T
 ---@param t table<unknown, T>
 ---@return T[]
@@ -318,6 +327,14 @@ local function ok_signature_help_to_string(sh)
   end
 end
 
+local augroup = vim.api.nvim_create_augroup("OkSignatureHelp", {})
+local namespace = vim.api.nvim_create_namespace("OkSignatureHelp")
+
+---@type OkState
+local state = { kind = "idle" }
+---@type integer?
+local window = nil
+
 local function log_env(f)
   local text = ""
   local function log(v)
@@ -328,8 +345,66 @@ local function log_env(f)
     end
   end
   f(log)
-  vim.notify(text)
+  -- vim.notify(text)
 end
+
+local function make_state_idle()
+  state = { kind = "idle" }
+  if window ~= nil then
+    vim.api.nvim_win_close(window, true)
+    window = nil
+  end
+end
+
+---@param src string
+---@param pattern string
+---@return string[]
+local function string_split(src, pattern)
+  src = src .. pattern
+  ---@type string[]
+  local res = {}
+  local seen_index = 0
+  while true do
+    local first, last = string.find(src, pattern, seen_index + 1, true)
+    if first == nil or last == nil then
+      break
+    end
+    table.insert(res, string.sub(src, seen_index + 1, first - 1))
+    seen_index = last
+  end
+  return res
+end
+
+---@param sh OkSignatureHelp
+local function make_state_available(sh)
+  if state.kind ~= "idle" then
+    return
+  end
+  state = { kind = "available", help = sh }
+  local rows = string_split(ok_signature_help_to_string(sh), "\n")
+  print(table.concat(rows, "\n"))
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+  vim.api.nvim_buf_set_lines(buf, 0, -1, true, rows)
+  window = vim.api.nvim_open_win(buf, false, {
+    relative = "cursor",
+    anchor = "SW",
+    row = -1,
+    col = 0,
+    width = 40,
+    height = 20,
+    style = "minimal",
+    noautocmd = true,
+  })
+end
+
+vim.api.nvim_create_autocmd("ModeChanged", {
+  group = augroup,
+  pattern = "i:*",
+  callback = function()
+    make_state_idle()
+  end,
+})
 
 vim.keymap.set("i", "<c-k>", function()
   log_env(function(log)
@@ -337,18 +412,12 @@ vim.keymap.set("i", "<c-k>", function()
     local res = vim.lsp.buf_request_sync(0, "textDocument/signatureHelp", req)
     log("res:")
     log(res)
-    for i, r in pairs(res) do
-      local st = new_ok_state_available(r.result)
-      log("state " .. i .. ":")
-      log(st)
-      if st ~= nil then
-        log("help " .. i .. ":")
-        log(ok_signature_help_to_string(st.help))
-        -- for j, sig in ipairs(st.help.signatures) do
-        -- 	log("signature #" .. j .. ":")
-        -- 	log(ok_signature_to_string(sig))
-        -- end
-      end
+    local r = table_first_value(res).result
+    local st = new_ok_state_available(r)
+    if st ~= nil then
+      make_state_available(st.help)
+    else
+      make_state_idle()
     end
   end)
 end)
