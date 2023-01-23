@@ -117,6 +117,29 @@ M.keymaps = {
     rhs = require("telescope.builtin").resume,
     desc = "Resume Telescope session (Telescope)",
   },
+
+  {
+    mode = { "n", "i", "s" },
+    lhs = "<s-tab>",
+    rhs = require("snippy.mapping").previous("<s-tab>"),
+    desc = "Previous snippet tabstop (Snippy)",
+  },
+  {
+    mode = { "n", "i", "s" },
+    lhs = "<tab>",
+    rhs = require("snippy.mapping").next("<tab>"),
+    desc = "Next snippet tabstop (Snippy)",
+  },
+  {
+    mode = "x",
+    lhs = "<tab>",
+    rhs = require("snippy.mapping").cut_text,
+  },
+  {
+    mode = "n",
+    lhs = "g<tab>",
+    rhs = require("snippy.mapping").cut_text,
+  },
 }
 
 local diagnostic_float_opts = {

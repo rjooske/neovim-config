@@ -123,7 +123,6 @@ require("packer").startup(function(use)
     "jose-elias-alvarez/null-ls.nvim",
     requires = "nvim-lua/plenary.nvim",
   })
-  use("jayp0521/mason-null-ls.nvim")
 
   use("hrsh7th/cmp-nvim-lsp")
   use("hrsh7th/cmp-buffer")
