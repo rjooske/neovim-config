@@ -73,6 +73,8 @@ local highlights = {
   { "@parameter.help", { link = "Number" } },
   { "@text.reference.help", { ctermfg = 12 } },
 
+  { "TelescopePromptCounter", { link = "Comment" } },
+
   { "CmpNormal", { bold = true } },
   { "CmpCursorLine", { standout = true } },
   { "CmpItemAbbr", { bold = true } },

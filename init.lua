@@ -238,10 +238,22 @@ local on_attach = function(client, bufnr)
   end, { desc = "Go to the previous diagnostic" })
   map("n", "K", vim.lsp.buf.hover, {})
   map("n", "gD", vim.lsp.buf.declaration, {})
-  map("n", "gd", require("telescope.builtin").lsp_definitions, {})
-  map("n", "gi", require("telescope.builtin").lsp_implementations, {})
-  map("n", "gr", require("telescope.builtin").lsp_references, {})
-  map("n", "<space>D", require("telescope.builtin").lsp_type_definitions, {})
+  map("n", "gd", function()
+    vim.cmd("normal m'")
+    require("telescope.builtin").lsp_definitions()
+  end, {})
+  map("n", "gi", function()
+    vim.cmd("normal m'")
+    require("telescope.builtin").lsp_implementations()
+  end, {})
+  map("n", "gr", function()
+    vim.cmd("normal m'")
+    require("telescope.builtin").lsp_references()
+  end, {})
+  map("n", "<space>D", function()
+    vim.cmd("normal m'")
+    require("telescope.builtin").lsp_type_definitions()
+  end, {})
   map("n", "<space>rn", vim.lsp.buf.rename, {})
   map("n", "<space>ca", vim.lsp.buf.code_action, {})
 end
@@ -425,6 +437,9 @@ require("nvim-treesitter.configs").setup({
 vim.wo.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 vim.wo.foldenable = false
+
+local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
+ft_to_parser.zsh = "bash"
 
 require("dressing").setup({
   input = { insert_only = false, win_options = { winblend = 0 } },
