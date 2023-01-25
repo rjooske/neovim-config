@@ -23,6 +23,7 @@ darazaki
 dcampos
 devicons
 dstein
+expandtab
 famiu
 feedkeys
 foldenable

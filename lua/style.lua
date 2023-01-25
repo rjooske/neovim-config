@@ -3,6 +3,7 @@ local M = {}
 M.opt = {
   colorcolumn = "80",
   cursorline = true,
+  expandtab = true,
   laststatus = 3,
   list = true,
   number = true,
