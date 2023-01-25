@@ -182,7 +182,7 @@ require("packer").startup(function(use)
   })
 end)
 
-local format = function(bufnr)
+local function format(bufnr)
   vim.lsp.buf.format({
     bufnr = bufnr,
     timeout_ms = 5000,
@@ -194,9 +194,9 @@ local format = function(bufnr)
   })
 end
 
-local on_attach = function(client, bufnr)
+local function on_attach(client, bufnr)
   -- Create a mapping local to this buffer
-  local map = function(mode, lhs, rhs, opts)
+  local function map(mode, lhs, rhs, opts)
     opts.buffer = bufnr
     vim.keymap.set(mode, lhs, rhs, opts)
   end
@@ -222,40 +222,10 @@ local on_attach = function(client, bufnr)
   -- 	}, bufnr)
   -- end
 
-  local diagnostic_float_opts = {
-    source = "always",
-    scope = "line",
-    border = "rounded",
-  }
-  map("n", "gl", function()
-    vim.diagnostic.open_float(diagnostic_float_opts)
-  end, { desc = "Open diagnostics on the current line" })
-  map("n", "]d", function()
-    vim.diagnostic.goto_next({ float = diagnostic_float_opts })
-  end, { desc = "Go to the next diagnostic" })
-  map("n", "[d", function()
-    vim.diagnostic.goto_prev({ float = diagnostic_float_opts })
-  end, { desc = "Go to the previous diagnostic" })
-  map("n", "K", vim.lsp.buf.hover, {})
-  map("n", "gD", vim.lsp.buf.declaration, {})
-  map("n", "gd", function()
-    vim.cmd("normal m'")
-    require("telescope.builtin").lsp_definitions()
-  end, {})
-  map("n", "gi", function()
-    vim.cmd("normal m'")
-    require("telescope.builtin").lsp_implementations()
-  end, {})
-  map("n", "gr", function()
-    vim.cmd("normal m'")
-    require("telescope.builtin").lsp_references()
-  end, {})
-  map("n", "<space>D", function()
-    vim.cmd("normal m'")
-    require("telescope.builtin").lsp_type_definitions()
-  end, {})
-  map("n", "<space>rn", vim.lsp.buf.rename, {})
-  map("n", "<space>ca", vim.lsp.buf.code_action, {})
+  for _, v in ipairs(require("keymap").lsp_keymaps) do
+    local opts = { silent = true, desc = v.desc }
+    map(v.mode, v.lhs, v.rhs, opts)
+  end
 end
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
@@ -458,8 +428,7 @@ require("Comment").setup({
   },
 })
 
-local autopairs = require("nvim-autopairs")
-autopairs.setup({ check_ts = true })
+require("nvim-autopairs").setup({ check_ts = true })
 
 require("indent-o-matic").setup({})
 -- Do not run indent-o-matic automatically

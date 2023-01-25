@@ -3,7 +3,6 @@ local M = {}
 local cmp = require("cmp")
 local lspkind = require("lspkind")
 local snippy = require("snippy")
-local snippy_mapping = require("snippy.mapping")
 
 local select_prev =
   cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
@@ -20,11 +19,6 @@ local source_buffer = {
     end,
   },
 }
-
-local feedkeys = function(keys)
-  keys = vim.api.nvim_replace_termcodes(keys, true, false, true)
-  vim.api.nvim_feedkeys(keys, "n", false)
-end
 
 M.setup = function()
   cmp.setup({
