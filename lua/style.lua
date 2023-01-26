@@ -16,6 +16,13 @@ M.opt = {
   tabstop = 4,
 }
 
+M.signs = {
+  DiagnosticSignError = " ",
+  DiagnosticSignWarn = " ",
+  DiagnosticSignInfo = " ",
+  DiagnosticSignHint = " ",
+}
+
 ---@param len integer
 ---@return string
 local leadmultispace = function(len)

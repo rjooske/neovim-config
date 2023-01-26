@@ -103,6 +103,10 @@ for k, v in pairs(require("style").opt) do
   vim.opt[k] = v
 end
 
+for name, text in pairs(require("style").signs) do
+  vim.fn.sign_define(name, { text = text, texthl = name })
+end
+
 local style_augroup = vim.api.nvim_create_augroup("RjooskeStyle", {})
 vim.api.nvim_create_autocmd("BufReadPost", {
   group = style_augroup,
