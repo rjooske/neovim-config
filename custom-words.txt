@@ -62,6 +62,7 @@ objcpp
 oldfiles
 onsails
 opleader
+parsername
 phaazon
 pmenu
 postprocess
