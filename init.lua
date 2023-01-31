@@ -34,19 +34,19 @@ vim.keymap.set(
   { silent = true, desc = "Paste from system clipboard" }
 )
 
-vim.keymap.set("n", "<leader>bd", function()
-  local buftype = vim.api.nvim_buf_get_option(0, "buftype")
-  local force = buftype == "terminal"
-  require("bufdelete").bufdelete(0, force)
-end)
-vim.keymap.set(
-  "n",
-  "<leader>bs",
-  ":BufferLineSortByDirectory<cr>",
-  { silent = true }
-)
-vim.keymap.set("n", "H", ":BufferLineCyclePrev<cr>", { silent = true })
-vim.keymap.set("n", "L", ":BufferLineCycleNext<cr>", { silent = true })
+-- vim.keymap.set("n", "<leader>bd", function()
+--   local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+--   local force = buftype == "terminal"
+--   require("bufdelete").bufdelete(0, force)
+-- end)
+-- vim.keymap.set(
+--   "n",
+--   "<leader>bs",
+--   ":BufferLineSortByDirectory<cr>",
+--   { silent = true }
+-- )
+-- vim.keymap.set("n", "H", ":BufferLineCyclePrev<cr>", { silent = true })
+-- vim.keymap.set("n", "L", ":BufferLineCycleNext<cr>", { silent = true })
 vim.keymap.set("n", "<c-h>", ":wincmd h<cr>", { silent = true })
 vim.keymap.set("n", "<c-j>", ":wincmd j<cr>", { silent = true })
 vim.keymap.set("n", "<c-k>", ":wincmd k<cr>", { silent = true })
@@ -173,12 +173,12 @@ require("packer").startup(function(use)
 
   use("lewis6991/gitsigns.nvim")
 
-  use({
-    "akinsho/bufferline.nvim",
-    tag = "v3.*",
-    requires = "nvim-tree/nvim-web-devicons",
-  })
-  use("famiu/bufdelete.nvim")
+  -- use({
+  --   "akinsho/bufferline.nvim",
+  --   tag = "v3.*",
+  --   requires = "nvim-tree/nvim-web-devicons",
+  -- })
+  -- use("famiu/bufdelete.nvim")
 
   use({
     "nvim-lualine/lualine.nvim",
@@ -354,8 +354,9 @@ null_ls.setup({
 
     null_ls.builtins.formatting.prettierd,
 
-    -- null_ls.builtins.diagnostics.flake8,
-    -- null_ls.builtins.diagnostics.pylint,
+    null_ls.builtins.diagnostics.flake8.with({
+      extra_args = { "--ignore", "E501,E741" },
+    }),
     null_ls.builtins.formatting.black,
     null_ls.builtins.formatting.isort,
 
@@ -369,6 +370,7 @@ null_ls.setup({
 
 require("nvim-treesitter.configs").setup({
   ensure_installed = {
+    "bash",
     "c",
     "cpp",
     "css",
@@ -498,16 +500,16 @@ require("nvim-surround").setup({})
 
 require("gitsigns").setup({})
 
-require("bufferline").setup({
-  highlights = {
-    buffer_selected = { ctermbg = 0 },
-    indicator_selected = { ctermbg = 0 },
-    separator_selected = { ctermbg = 0 },
-    close_button_selected = { ctermbg = 0 },
-    duplicate_selected = { ctermbg = 0 },
-    modified_selected = { ctermbg = 0 },
-  },
-})
+-- require("bufferline").setup({
+--   highlights = {
+--     buffer_selected = { ctermbg = 0 },
+--     indicator_selected = { ctermbg = 0 },
+--     separator_selected = { ctermbg = 0 },
+--     close_button_selected = { ctermbg = 0 },
+--     duplicate_selected = { ctermbg = 0 },
+--     modified_selected = { ctermbg = 0 },
+--   },
+-- })
 
 require("lualine").setup({
   sections = {

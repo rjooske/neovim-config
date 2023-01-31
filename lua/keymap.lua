@@ -74,6 +74,12 @@ M.keymaps = {
   },
   {
     mode = "n",
+    lhs = "<leader>b",
+    rhs = telescope_builtin.buffers,
+    desc = "Find buffers (Telescope)",
+  },
+  {
+    mode = "n",
     lhs = "<leader>fg",
     rhs = telescope_builtin.live_grep,
     desc = "Live-grep in current directory (Telescope)",
@@ -83,12 +89,6 @@ M.keymaps = {
     lhs = "<leader>fq",
     rhs = telescope_builtin.quickfix,
     desc = "Open quickfix (Telescope)",
-  },
-  {
-    mode = "n",
-    lhs = "<leader>fb",
-    rhs = telescope_builtin.buffers,
-    desc = "Find buffers (Telescope)",
   },
   {
     mode = "n",

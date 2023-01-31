@@ -1,5 +1,9 @@
 local M = {}
 
+---@class OkIndentOpts
+---@field expandtab boolean
+---@field shiftwidth integer
+
 ---@param bufnr integer
 ---@return fun(): string?
 local function iterate_buf_lines(bufnr)
@@ -33,25 +37,32 @@ end
 
 ---@param line string
 ---@param widths integer[]
----@return integer
+---@return integer?
 local function detect_spaces(line, widths)
   for _, w in ipairs(widths) do
     if starts_with_n_spaces(line, w) then
       return w
     end
   end
-  return 0
 end
 
-local function detect(cfg, line) end
+---@param line string
+---@param widths integer[]
+---@param prev_opts OkIndentOpts
+---@return OkIndentOpts?
+local function detect_opts(line, widths, prev_opts)
+  if detect_tab(line) then
+    return { expandtab = true, shiftwidth = prev_opts.shiftwidth }
+  end
+  local w = detect_spaces(line, widths)
+  if w ~= nil then
+    return { expandtab = false, shiftwidth = w }
+  end
+end
 
 M.detect = function()
+  local widths = { 2, 4 }
   for line in iterate_buf_lines(0) do
-    local s = detect_spaces(line, { 2, 4 })
-    if s == nil then
-      s = 0
-    end
-    print(s .. " " .. line)
   end
 end
 
