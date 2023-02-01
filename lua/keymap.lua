@@ -2,6 +2,7 @@ local M = {}
 
 local telescope_builtin = require("telescope.builtin")
 local snippy_mapping = require("snippy.mapping")
+local gitsigns = require("gitsigns")
 
 M.leader = " "
 
@@ -137,11 +138,26 @@ M.keymaps = {
     mode = "x",
     lhs = "<tab>",
     rhs = snippy_mapping.cut_text,
+    desc = "Cut text (Snippy)",
   },
   {
     mode = "n",
     lhs = "g<tab>",
     rhs = snippy_mapping.cut_text,
+    desc = "Cut text (Snippy)",
+  },
+
+  {
+    mode = "n",
+    lhs = "[h",
+    rhs = gitsigns.prev_hunk,
+    desc = "Previous hunk (Gitsigns)",
+  },
+  {
+    mode = "n",
+    lhs = "]h",
+    rhs = gitsigns.next_hunk,
+    desc = "Next hunk (Gitsigns)",
   },
 }
 
