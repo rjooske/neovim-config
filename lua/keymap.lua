@@ -75,7 +75,7 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>b",
+    lhs = "<leader>fe",
     rhs = telescope_builtin.buffers,
     desc = "Find buffers (Telescope)",
   },
