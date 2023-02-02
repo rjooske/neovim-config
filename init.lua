@@ -355,7 +355,7 @@ null_ls.setup({
     null_ls.builtins.formatting.prettierd,
 
     null_ls.builtins.diagnostics.flake8.with({
-      extra_args = { "--ignore", "E501,E741" },
+      extra_args = { "--ignore", "E203,E501,E741" },
     }),
     null_ls.builtins.formatting.black,
     null_ls.builtins.formatting.isort,
