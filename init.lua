@@ -34,11 +34,12 @@ vim.keymap.set(
   { silent = true, desc = "Paste from system clipboard" }
 )
 
--- vim.keymap.set("n", "<leader>bd", function()
---   local buftype = vim.api.nvim_buf_get_option(0, "buftype")
---   local force = buftype == "terminal"
---   require("bufdelete").bufdelete(0, force)
--- end)
+vim.keymap.set("n", "<leader>bd", function()
+  local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+  local force = buftype == "terminal" or filetype == "netrw"
+  require("bufdelete").bufdelete(0, force)
+end)
 -- vim.keymap.set(
 --   "n",
 --   "<leader>bs",
@@ -178,7 +179,7 @@ require("packer").startup(function(use)
   --   tag = "v3.*",
   --   requires = "nvim-tree/nvim-web-devicons",
   -- })
-  -- use("famiu/bufdelete.nvim")
+  use("famiu/bufdelete.nvim")
 
   use({
     "nvim-lualine/lualine.nvim",
