@@ -53,6 +53,19 @@ M.keymaps = {
 
   {
     mode = "n",
+    lhs = "[t",
+    rhs = "<cmd>tabprevious<cr>",
+    desc = "Previous tab page",
+  },
+  {
+    mode = "n",
+    lhs = "]t",
+    rhs = "<cmd>tabnext<cr>",
+    desc = "Next tab page",
+  },
+
+  {
+    mode = "n",
     lhs = "<leader>o",
     rhs = telescope_builtin.find_files,
     desc = "Find files (Telescope)",
