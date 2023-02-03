@@ -1,4 +1,5 @@
 akinsho
+tabnext
 atmega
 augroup
 autocmd
@@ -86,6 +87,7 @@ stevearc
 storageclass
 stylua
 sumneko
+tabprevious
 taplo
 termcodes
 texthl
