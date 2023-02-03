@@ -454,8 +454,10 @@ telescope.setup({
     mappings = {
       i = { ["<esc>"] = actions.close },
     },
+    layout_strategy = "vertical",
   },
   pickers = {
+    find_files = { hidden = true },
     live_grep = {
       mappings = {
         i = { ["<c-space>"] = actions.to_fuzzy_refine },
