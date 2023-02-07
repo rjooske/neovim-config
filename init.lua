@@ -112,8 +112,14 @@ local style_augroup = vim.api.nvim_create_augroup("RjooskeStyle", {})
 vim.api.nvim_create_autocmd("BufReadPost", {
   group = style_augroup,
   callback = function()
-    vim.cmd.IndentOMatic()
-    vim.opt.listchars = require("style").listchars(vim.opt.tabstop:get())
+    local opts = require("indent").detect(0)
+    if opts == nil then
+      return
+    end
+    for k, v in pairs(opts) do
+      vim.opt[k] = v
+    end
+    vim.opt.listchars = require("style").listchars(opts.tabstop)
   end,
 })
 
@@ -151,7 +157,7 @@ require("packer").startup(function(use)
 
   use("windwp/nvim-autopairs")
   use("numToStr/Comment.nvim")
-  use("Darazaki/indent-o-matic")
+  -- use("Darazaki/indent-o-matic")
 
   use({
     "nvim-telescope/telescope.nvim",
@@ -185,6 +191,8 @@ require("packer").startup(function(use)
     "nvim-lualine/lualine.nvim",
     requires = { "kyazdani42/nvim-web-devicons" },
   })
+
+  use("SmiteshP/nvim-navic")
 end)
 
 local function format(bufnr)
@@ -218,6 +226,10 @@ local function on_attach(client, bufnr)
         format(bufnr)
       end,
     })
+  end
+
+  if client.server_capabilities.documentSymbolProvider then
+    require("nvim-navic").attach(client, bufnr)
   end
 
   -- if client.supports_method("textDocument/signatureHelp") then
@@ -356,9 +368,11 @@ null_ls.setup({
     null_ls.builtins.formatting.prettierd,
 
     null_ls.builtins.diagnostics.flake8.with({
-      extra_args = { "--ignore", "E203,E501,E741" },
+      extra_args = { "--ignore", "E203,E741" },
     }),
-    null_ls.builtins.formatting.black,
+    null_ls.builtins.formatting.black.with({
+      extra_args = { "--line-length", "79" },
+    }),
     null_ls.builtins.formatting.isort,
 
     null_ls.builtins.formatting.rustfmt,
@@ -437,14 +451,14 @@ require("Comment").setup({
 
 require("nvim-autopairs").setup({ check_ts = true })
 
-require("indent-o-matic").setup({})
--- Do not run indent-o-matic automatically
-vim.api.nvim_create_autocmd("BufReadPre", {
-  once = true,
-  callback = function()
-    vim.api.nvim_del_augroup_by_name("indent_o_matic")
-  end,
-})
+-- require("indent-o-matic").setup({})
+-- -- Do not run indent-o-matic automatically
+-- vim.api.nvim_create_autocmd("BufReadPre", {
+--   once = true,
+--   callback = function()
+--     vim.api.nvim_del_augroup_by_name("indent_o_matic")
+--   end,
+-- })
 
 local telescope = require("telescope")
 local actions = require("telescope.actions")
@@ -574,3 +588,5 @@ require("lualine").setup({
 })
 
 require("completion").setup()
+
+vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"

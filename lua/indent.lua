@@ -1,8 +1,26 @@
 local M = {}
 
+---@class VimIndentOptions
+---@field expandtab boolean
+---@field shiftwidth integer
+---@field tabstop integer
+
 ---@class OkIndentConfig
 ---@field tab_width integer
 ---@field space_widths integer[]
+
+---@param arr number[]
+---@return number[]
+local function sorted_descending(arr)
+  local res = {}
+  for _, v in ipairs(arr) do
+    table.insert(res, v)
+  end
+  table.sort(res, function(a, b)
+    return a > b
+  end)
+  return res
+end
 
 ---@param line string
 ---@return boolean
@@ -18,7 +36,7 @@ local function starts_with_n_spaces(s, n)
 end
 
 ---@param line string
----@param widths integer[]
+---@param widths integer[] Must be sorted in descending order.
 ---@return integer?
 local function detect_spaces(line, widths)
   for _, w in ipairs(widths) do
@@ -30,7 +48,7 @@ end
 
 ---@param line string
 ---@param cfg OkIndentConfig
----@return { expandtab: boolean, shiftwidth: integer, tabstop: integer }?
+---@return VimIndentOptions?
 local function detect_opts(line, cfg)
   if detect_tab(line) then
     return {
@@ -46,15 +64,16 @@ local function detect_opts(line, cfg)
 end
 
 ---@param bufnr integer
+---@param max_line_len integer
 ---@return fun(): string?
-local function iterate_buf_lines(bufnr)
+local function iterate_buf_lines(bufnr, max_line_len)
   local line_count = vim.api.nvim_buf_line_count(bufnr)
   local i = 0
   return function()
     if i == line_count then
       return
     end
-    local lines = vim.api.nvim_buf_get_lines(bufnr, i, i + 1, true)
+    local lines = vim.api.nvim_buf_get_text(bufnr, i, 0, i, max_line_len, {})
     if #lines ~= 1 then
       return
     end
@@ -63,23 +82,21 @@ local function iterate_buf_lines(bufnr)
   end
 end
 
-M.detect = function()
+---@param bufnr integer
+---@return VimIndentOptions?
+M.detect = function(bufnr)
   ---@type OkIndentConfig
   local cfg = {
     tab_width = 4,
-    space_widths = { 2, 4 },
+    space_widths = { 4, 2 },
   }
-  for line in iterate_buf_lines(0) do
+  local max_space_width = cfg.space_widths[1]
+  for line in iterate_buf_lines(bufnr, max_space_width) do
     local opts = detect_opts(line, cfg)
     if opts ~= nil then
-      for k, v in pairs(opts) do
-        vim.opt[k] = v
-      end
-      break
+      return opts
     end
   end
 end
-
-M.detect()
 
 return M
