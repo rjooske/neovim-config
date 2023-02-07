@@ -14,8 +14,10 @@ catppuccin
 clangd
 clippy
 cmdline
+cnext
 colorcolumn
 completeopt
+cprevious
 ctermbg
 ctermfg
 cuda
@@ -73,6 +75,7 @@ prettierd
 proto
 pylint
 pyright
+qflist
 quickfix
 relativenumber
 rjooske
@@ -99,6 +102,7 @@ treesitter
 vimruntime
 wbthomason
 williamboman
+winbar
 winblend
 wincmd
 windwp
