@@ -1,5 +1,4 @@
 akinsho
-tabnext
 atmega
 augroup
 autocmd
@@ -11,6 +10,7 @@ bufnrs
 bufs
 buftype
 builtins
+catppuccin
 clangd
 clippy
 cmdline
@@ -52,6 +52,7 @@ lspkind
 lualine
 mapleader
 menuone
+navic
 neovim
 netrw
 noautocmd
@@ -80,6 +81,7 @@ shiftwidth
 showmode
 signcolumn
 simrat
+smiteshp
 splitbelow
 splitright
 startuptime
@@ -87,6 +89,7 @@ stevearc
 storageclass
 stylua
 sumneko
+tabnext
 tabprevious
 taplo
 termcodes
