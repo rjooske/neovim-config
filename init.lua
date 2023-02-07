@@ -451,22 +451,17 @@ require("Comment").setup({
 
 require("nvim-autopairs").setup({ check_ts = true })
 
--- require("indent-o-matic").setup({})
--- -- Do not run indent-o-matic automatically
--- vim.api.nvim_create_autocmd("BufReadPre", {
---   once = true,
---   callback = function()
---     vim.api.nvim_del_augroup_by_name("indent_o_matic")
---   end,
--- })
-
 local telescope = require("telescope")
 local actions = require("telescope.actions")
 telescope.setup({
   defaults = {
     file_ignore_patterns = { "^%.git/" },
     mappings = {
-      i = { ["<esc>"] = actions.close },
+      i = {
+        ["<esc>"] = actions.close,
+        ["<c-q>"] = actions.send_to_qflist,
+        ["<m-q>"] = actions.send_selected_to_qflist,
+      },
     },
     layout_strategy = "vertical",
   },
