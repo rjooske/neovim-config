@@ -50,7 +50,79 @@ M.keymaps = {
     rhs = "<cmd>noh<cr>",
     desc = "Clear search highlights",
   },
+  {
+    mode = { "n", "v" },
+    lhs = "<leader>y",
+    rhs = '"*y',
+    desc = '`y` with `"*` register',
+  },
+  {
+    mode = { "n", "v" },
+    lhs = "<leader>Y",
+    rhs = '"*Y',
+    desc = '`Y` with `"*` register',
+  },
+  {
+    mode = { "n", "v" },
+    lhs = "<leader>p",
+    rhs = '"*p',
+    desc = '`p` with `"*` register',
+  },
+  {
+    mode = { "n", "v" },
+    lhs = "<leader>P",
+    rhs = '"*P',
+    desc = '`P` with `"*` register',
+  },
 
+  {
+    mode = "n",
+    lhs = "<c-h>",
+    rhs = "<cmd>wincmd h<cr>",
+    desc = "Window to the left",
+  },
+  {
+    mode = "n",
+    lhs = "<c-j>",
+    rhs = "<cmd>wincmd j<cr>",
+    desc = "Window below",
+  },
+  {
+    mode = "n",
+    lhs = "<c-k>",
+    rhs = "<cmd>wincmd k<cr>",
+    desc = "Window above",
+  },
+  {
+    mode = "n",
+    lhs = "<c-l>",
+    rhs = "<cmd>wincmd l<cr>",
+    desc = "Window to the right",
+  },
+  {
+    mode = "t",
+    lhs = "<c-h>",
+    rhs = "<c-\\><c-n><cmd>wincmd h<cr>",
+    desc = "Window to the left",
+  },
+  {
+    mode = "t",
+    lhs = "<c-j>",
+    rhs = "<c-\\><c-n><cmd>wincmd j<cr>",
+    desc = "Window below",
+  },
+  {
+    mode = "t",
+    lhs = "<c-k>",
+    rhs = "<c-\\><c-n><cmd>wincmd k<cr>",
+    desc = "Window above",
+  },
+  {
+    mode = "t",
+    lhs = "<c-l>",
+    rhs = "<c-\\><c-n><cmd>wincmd l<cr>",
+    desc = "Window to the right",
+  },
   {
     mode = "n",
     lhs = "[t",
@@ -62,6 +134,18 @@ M.keymaps = {
     lhs = "]t",
     rhs = "<cmd>tabnext<cr>",
     desc = "Next tab page",
+  },
+  {
+    mode = "n",
+    lhs = "[c",
+    rhs = "<cmd>cprevious<cr>",
+    desc = "Previous quickfix",
+  },
+  {
+    mode = "n",
+    lhs = "]c",
+    rhs = "<cmd>cnext<cr>",
+    desc = "Next quickfix",
   },
 
   {

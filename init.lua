@@ -9,96 +9,12 @@ for _, v in ipairs(require("keymap").keymaps) do
   vim.keymap.set(v.mode, v.lhs, v.rhs, opts)
 end
 
-vim.keymap.set(
-  { "n", "v" },
-  "<leader>y",
-  '"*y',
-  { silent = true, desc = "Yank to system clipboard" }
-)
-vim.keymap.set(
-  { "n", "v" },
-  "<leader>Y",
-  '"*Y',
-  { silent = true, desc = "Yank to system clipboard" }
-)
-vim.keymap.set(
-  { "n", "v" },
-  "<leader>p",
-  '"*p',
-  { silent = true, desc = "Paste from system clipboard" }
-)
-vim.keymap.set(
-  { "n", "v" },
-  "<leader>P",
-  '"*P',
-  { silent = true, desc = "Paste from system clipboard" }
-)
-
 vim.keymap.set("n", "<leader>bd", function()
   local buftype = vim.api.nvim_buf_get_option(0, "buftype")
   local filetype = vim.api.nvim_buf_get_option(0, "filetype")
   local force = buftype == "terminal" or filetype == "netrw"
   require("bufdelete").bufdelete(0, force)
 end)
--- vim.keymap.set(
---   "n",
---   "<leader>bs",
---   ":BufferLineSortByDirectory<cr>",
---   { silent = true }
--- )
--- vim.keymap.set("n", "H", ":BufferLineCyclePrev<cr>", { silent = true })
--- vim.keymap.set("n", "L", ":BufferLineCycleNext<cr>", { silent = true })
-vim.keymap.set("n", "<c-h>", ":wincmd h<cr>", { silent = true })
-vim.keymap.set("n", "<c-j>", ":wincmd j<cr>", { silent = true })
-vim.keymap.set("n", "<c-k>", ":wincmd k<cr>", { silent = true })
-vim.keymap.set("n", "<c-l>", ":wincmd l<cr>", { silent = true })
-
-vim.keymap.set("t", "<c-h>", "<c-\\><c-n>:wincmd h<cr>", { silent = true })
-vim.keymap.set("t", "<c-j>", "<c-\\><c-n>:wincmd j<cr>", { silent = true })
-vim.keymap.set("t", "<c-k>", "<c-\\><c-n>:wincmd k<cr>", { silent = true })
-vim.keymap.set("t", "<c-l>", "<c-\\><c-n>:wincmd l<cr>", { silent = true })
-vim.keymap.set("t", "<esc>", "<c-\\><c-n>", { silent = true })
-
--- Bad code ahead
-local prev_win = 0
-
-vim.keymap.set({ "n", "i", "t" }, "<c-;>", function()
-  local current_win = vim.api.nvim_get_current_win()
-  if
-    vim.api.nvim_buf_get_option(
-      vim.api.nvim_win_get_buf(current_win),
-      "buftype"
-    ) == "terminal"
-  then
-    vim.api.nvim_set_current_win(prev_win)
-    prev_win = current_win
-    return
-  end
-
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    if
-      vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(win), "buftype")
-      == "terminal"
-    then
-      vim.api.nvim_set_current_win(win)
-      prev_win = current_win
-      vim.cmd("normal Ga")
-      return
-    end
-  end
-
-  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
-      vim.api.nvim_set_current_buf(bufnr)
-      vim.cmd("normal Ga")
-      return
-    end
-  end
-
-  vim.cmd("vs | te")
-  vim.cmd("normal Ga")
-end)
--- Bad code end
 
 for k, v in pairs(require("style").opt) do
   vim.opt[k] = v
@@ -157,7 +73,6 @@ require("packer").startup(function(use)
 
   use("windwp/nvim-autopairs")
   use("numToStr/Comment.nvim")
-  -- use("Darazaki/indent-o-matic")
 
   use({
     "nvim-telescope/telescope.nvim",
@@ -180,11 +95,6 @@ require("packer").startup(function(use)
 
   use("lewis6991/gitsigns.nvim")
 
-  -- use({
-  --   "akinsho/bufferline.nvim",
-  --   tag = "v3.*",
-  --   requires = "nvim-tree/nvim-web-devicons",
-  -- })
   use("famiu/bufdelete.nvim")
 
   use({
@@ -200,8 +110,6 @@ local function format(bufnr)
     bufnr = bufnr,
     timeout_ms = 5000,
     filter = function(client)
-      -- -- Do not ask tsserver to format the code
-      -- return client.name ~= "tsserver"
       return client.name == "null-ls"
     end,
   })
@@ -232,13 +140,6 @@ local function on_attach(client, bufnr)
     require("nvim-navic").attach(client, bufnr)
   end
 
-  -- if client.supports_method("textDocument/signatureHelp") then
-  -- 	-- Show parameter names, types, etc
-  -- 	require("lsp_signature").on_attach({
-  -- 		toggle_key = "<c-k>",
-  -- 	}, bufnr)
-  -- end
-
   for _, v in ipairs(require("keymap").lsp_keymaps) do
     local opts = { silent = true, desc = v.desc }
     map(v.mode, v.lhs, v.rhs, opts)
@@ -263,7 +164,6 @@ vim.diagnostic.config({
 })
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
--- capabilities.offsetEncoding = { "utf-8" }
 local lspconfig = require("lspconfig")
 lspconfig.sumneko_lua.setup({
   on_attach = on_attach,
@@ -360,7 +260,6 @@ null_ls.setup({
     }),
 
     null_ls.builtins.diagnostics.eslint_d.with({ condition = eslint_condition }),
-    -- null_ls.builtins.formatting.eslint_d.with({ condition = eslint_condition }),
     null_ls.builtins.code_actions.eslint_d.with({
       condition = eslint_condition,
     }),
@@ -409,7 +308,6 @@ require("nvim-treesitter.configs").setup({
     "typescript",
     "vim",
   },
-  -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
   highlight = {
     enable = true,
@@ -486,24 +384,7 @@ telescope.setup({
 telescope.load_extension("fzf")
 
 local hop = require("hop")
-local hop_hint = require("hop.hint")
 hop.setup()
-vim.keymap.set({ "n", "v" }, "<leader><leader>w", function()
-  hop.hint_words({ direction = hop_hint.HintDirection.AFTER_CURSOR })
-end)
-vim.keymap.set({ "n", "v" }, "<leader><leader>b", function()
-  hop.hint_words({ direction = hop_hint.HintDirection.BEFORE_CURSOR })
-end)
-vim.keymap.set({ "n", "v" }, "<leader><leader>j", function()
-  hop.hint_lines_skip_whitespace({
-    direction = hop_hint.HintDirection.AFTER_CURSOR,
-  })
-end)
-vim.keymap.set({ "n", "v" }, "<leader><leader>k", function()
-  hop.hint_lines_skip_whitespace({
-    direction = hop_hint.HintDirection.BEFORE_CURSOR,
-  })
-end)
 vim.keymap.set({ "n", "v" }, "<leader>h", function()
   require("hop").hint_char2({})
 end)
@@ -511,17 +392,6 @@ end)
 require("nvim-surround").setup({})
 
 require("gitsigns").setup({})
-
--- require("bufferline").setup({
---   highlights = {
---     buffer_selected = { ctermbg = 0 },
---     indicator_selected = { ctermbg = 0 },
---     separator_selected = { ctermbg = 0 },
---     close_button_selected = { ctermbg = 0 },
---     duplicate_selected = { ctermbg = 0 },
---     modified_selected = { ctermbg = 0 },
---   },
--- })
 
 require("lualine").setup({
   sections = {
