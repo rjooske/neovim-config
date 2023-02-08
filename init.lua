@@ -1,3 +1,55 @@
+require("packer").startup(function(use)
+  use("wbthomason/packer.nvim")
+
+  use("neovim/nvim-lspconfig")
+  use({
+    "jose-elias-alvarez/null-ls.nvim",
+    requires = "nvim-lua/plenary.nvim",
+  })
+
+  use("hrsh7th/cmp-nvim-lsp")
+  use("hrsh7th/cmp-buffer")
+  use("hrsh7th/cmp-path")
+  use("hrsh7th/cmp-cmdline")
+  use("hrsh7th/nvim-cmp")
+  use("dcampos/nvim-snippy")
+  use("dcampos/cmp-snippy")
+  use("onsails/lspkind.nvim")
+
+  use("simrat39/rust-tools.nvim")
+
+  use({
+    "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
+  })
+  use("SmiteshP/nvim-navic")
+  use("stevearc/dressing.nvim")
+  use("nvim-tree/nvim-web-devicons")
+  use({
+    "nvim-lualine/lualine.nvim",
+    requires = { "kyazdani42/nvim-web-devicons" },
+  })
+
+  use({
+    "nvim-telescope/telescope.nvim",
+    requires = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+    },
+  })
+
+  use("lewis6991/gitsigns.nvim")
+
+  use("famiu/bufdelete.nvim")
+
+  use("windwp/nvim-autopairs")
+  use("numToStr/Comment.nvim")
+  use("phaazon/hop.nvim")
+  use("kylechui/nvim-surround")
+
+  use("dstein64/vim-startuptime")
+end)
+
 vim.cmd.colorscheme("rjooske")
 
 vim.g.netrw_banner = 0
@@ -38,72 +90,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     vim.opt.listchars = require("style").listchars(opts.tabstop)
   end,
 })
-
-require("packer").startup(function(use)
-  use("wbthomason/packer.nvim")
-
-  use("dstein64/vim-startuptime")
-
-  use("neovim/nvim-lspconfig")
-
-  use({
-    "jose-elias-alvarez/null-ls.nvim",
-    requires = "nvim-lua/plenary.nvim",
-  })
-
-  use("hrsh7th/cmp-nvim-lsp")
-  use("hrsh7th/cmp-buffer")
-  use("hrsh7th/cmp-path")
-  use("hrsh7th/cmp-cmdline")
-  use("hrsh7th/nvim-cmp")
-  use("onsails/lspkind.nvim")
-
-  use("dcampos/nvim-snippy")
-  use("dcampos/cmp-snippy")
-
-  use("simrat39/rust-tools.nvim")
-
-  -- use("ray-x/lsp_signature.nvim")
-
-  use({
-    "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
-  })
-  use("stevearc/dressing.nvim")
-
-  use("windwp/nvim-autopairs")
-  use("numToStr/Comment.nvim")
-
-  use({
-    "nvim-telescope/telescope.nvim",
-    requires = {
-      { "nvim-lua/plenary.nvim" },
-      { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-    },
-  })
-
-  use("nvim-tree/nvim-web-devicons")
-
-  use({
-    "phaazon/hop.nvim",
-    branch = "v2", -- optional but strongly recommended
-  })
-  use({
-    "kylechui/nvim-surround",
-    tag = "*", -- Use for stability; omit to use `main` branch for the latest features
-  })
-
-  use("lewis6991/gitsigns.nvim")
-
-  use("famiu/bufdelete.nvim")
-
-  use({
-    "nvim-lualine/lualine.nvim",
-    requires = { "kyazdani42/nvim-web-devicons" },
-  })
-
-  use("SmiteshP/nvim-navic")
-end)
 
 local function format(bufnr)
   vim.lsp.buf.format({
