@@ -304,6 +304,7 @@ require("nvim-treesitter.configs").setup({
     "python",
     "rust",
     "scss",
+    "sql",
     "toml",
     "typescript",
     "vim",
@@ -353,7 +354,7 @@ local telescope = require("telescope")
 local actions = require("telescope.actions")
 telescope.setup({
   defaults = {
-    file_ignore_patterns = { "^%.git/" },
+    file_ignore_patterns = { "^.git/" },
     mappings = {
       i = {
         ["<esc>"] = actions.close,
@@ -361,6 +362,7 @@ telescope.setup({
         ["<m-q>"] = actions.send_selected_to_qflist,
       },
     },
+    path_display = { "truncate" },
     layout_strategy = "vertical",
   },
   pickers = {

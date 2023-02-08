@@ -375,6 +375,13 @@ local function string_split(src, pattern)
   return res
 end
 
+---@param lines string[]
+---@return integer
+local function window_height(lines)
+  local win_wrap = true
+  local win_max_width = 20
+end
+
 ---@param sh OkSignatureHelp
 local function make_state_available(sh)
   if state.kind ~= "idle" then
@@ -382,7 +389,6 @@ local function make_state_available(sh)
   end
   state = { kind = "available", help = sh }
   local rows = string_split(ok_signature_help_to_string(sh), "\n")
-  print(table.concat(rows, "\n"))
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
   vim.api.nvim_buf_set_lines(buf, 0, -1, true, rows)
@@ -413,6 +419,9 @@ vim.keymap.set("i", "<c-k>", function()
     log("res:")
     log(res)
     local r = table_first_value(res).result
+    if r == nil then
+      return
+    end
     local st = new_ok_state_available(r)
     if st ~= nil then
       make_state_available(st.help)
