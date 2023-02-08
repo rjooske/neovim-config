@@ -252,8 +252,12 @@ null_ls.setup({
     }),
     null_ls.builtins.code_actions.cspell,
 
-    null_ls.builtins.diagnostics.selene,
     null_ls.builtins.formatting.stylua,
+    null_ls.builtins.diagnostics.selene.with({
+      condition = function(utils)
+        return utils.root_has_file({ "selene.toml" })
+      end,
+    }),
 
     null_ls.builtins.formatting.clang_format.with({
       extra_filetypes = { "arduino" },
