@@ -29,6 +29,7 @@ dstein
 expandtab
 famiu
 feedkeys
+filesize
 foldenable
 foldexpr
 foldmethod
@@ -80,6 +81,7 @@ quickfix
 relativenumber
 rjooske
 rustfmt
+setreg
 shiftwidth
 showmode
 signcolumn
