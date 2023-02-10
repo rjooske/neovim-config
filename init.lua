@@ -101,6 +101,15 @@ local function format(bufnr)
   })
 end
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = vim.api.nvim_create_augroup("FormatOnSave", {}),
+  callback = function(event)
+    if #vim.lsp.get_active_clients({ bufnr = event.buf }) > 0 then
+      format(event.buf)
+    end
+  end,
+})
+
 local function on_attach(client, bufnr)
   -- Create a mapping local to this buffer
   local function map(mode, lhs, rhs, opts)
@@ -112,14 +121,6 @@ local function on_attach(client, bufnr)
     map("n", "<leader>lf", function()
       format(bufnr)
     end, { desc = "Format" })
-
-    -- Format on save
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      buffer = bufnr,
-      callback = function()
-        format(bufnr)
-      end,
-    })
   end
 
   if client.server_capabilities.documentSymbolProvider then
@@ -302,6 +303,13 @@ require("nvim-treesitter.configs").setup({
   sync_install = false,
   highlight = {
     enable = true,
+    disable = function(_, buf)
+      local max_filesize = 100 * 1024 -- 100 KB
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then
+        return true
+      end
+    end,
     additional_vim_regex_highlighting = false,
   },
   indent = { enable = true },
@@ -314,9 +322,9 @@ require("nvim-treesitter.configs").setup({
     },
   },
 })
-vim.wo.foldmethod = "expr"
-vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
-vim.wo.foldenable = false
+-- vim.wo.foldmethod = "expr"
+-- vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.wo.foldenable = false
 
 local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
 ft_to_parser.zsh = "bash"
@@ -354,6 +362,7 @@ telescope.setup({
     },
     path_display = { "truncate" },
     layout_strategy = "vertical",
+    preview = { filesize_limit = 1 },
   },
   pickers = {
     find_files = { hidden = true },
