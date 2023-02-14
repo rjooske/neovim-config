@@ -136,10 +136,6 @@ end
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
   border = "rounded",
 })
-vim.lsp.handlers["textDocument/signatureHelp"] =
-  vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = "rounded",
-  })
 
 vim.diagnostic.config({
   severity_sort = true,
@@ -363,7 +359,7 @@ telescope.setup({
     },
     path_display = { "truncate" },
     layout_strategy = "vertical",
-    preview = { filesize_limit = 1 },
+    preview = { filesize_limit = 1 }, -- 1 MB
   },
   pickers = {
     find_files = { hidden = true },
