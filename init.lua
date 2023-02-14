@@ -77,7 +77,7 @@ for name, text in pairs(require("style").signs) do
 end
 
 local style_augroup = vim.api.nvim_create_augroup("RjooskeStyle", {})
-vim.api.nvim_create_autocmd("BufReadPost", {
+vim.api.nvim_create_autocmd("BufWinEnter", {
   group = style_augroup,
   callback = function()
     local opts = require("indent").detect(0)
