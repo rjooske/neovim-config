@@ -1,6 +1,7 @@
 local M = {}
 
 M.opt = {
+  background = "dark",
   colorcolumn = "80",
   cursorline = true,
   expandtab = true,

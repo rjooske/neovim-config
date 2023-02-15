@@ -34,12 +34,6 @@ M.setup = function()
         ellipsis_char = "...",
       }),
     },
-    window = {
-      completion = cmp.config.window.bordered({
-        winhighlight = "Normal:CmpNormal,CursorLine:CmpCursorLine,Search:None",
-      }),
-      documentation = cmp.config.window.bordered(),
-    },
     mapping = {
       ["<c-space>"] = { i = cmp.mapping.complete() },
       ["<c-p>"] = { i = select_prev },

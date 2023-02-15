@@ -30,6 +30,8 @@ require("packer").startup(function(use)
     requires = { "kyazdani42/nvim-web-devicons" },
   })
 
+  use("ellisonleao/gruvbox.nvim")
+
   use({
     "nvim-telescope/telescope.nvim",
     requires = {
@@ -50,7 +52,8 @@ require("packer").startup(function(use)
   use("dstein64/vim-startuptime")
 end)
 
-vim.cmd.colorscheme("rjooske")
+-- vim.cmd.colorscheme("rjooske")
+vim.cmd.colorscheme("gruvbox")
 
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
@@ -133,16 +136,11 @@ local function on_attach(client, bufnr)
   end
 end
 
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = "rounded",
-})
-
 vim.diagnostic.config({
   severity_sort = true,
   float = {
     source = "always",
     scope = "line",
-    border = "rounded",
   },
 })
 
@@ -193,7 +191,6 @@ lspconfig.arduino_language_server.setup({
     "clangd",
   },
 })
-require("lspconfig.ui.windows").default_options.border = "rounded"
 
 local rust_tools = require("rust-tools")
 rust_tools.setup({
@@ -393,60 +390,13 @@ require("gitsigns").setup({})
 
 require("lualine").setup({
   sections = {
-    lualine_b = {
-      { "branch" },
-      {
-        "diff",
-        colored = true,
-        diff_color = {
-          added = "DiffAdd",
-          modified = "DiffChange",
-          removed = "DiffDelete",
-        },
-      },
-      {
-        "diagnostics",
-        diagnostics_color = {
-          error = "DiagnosticError",
-          warn = "DiagnosticWarn",
-          info = "DiagnosticInfo",
-          hint = "DiagnosticHint",
-        },
-      },
-    },
     lualine_c = {
-      {
-        "filename",
-        path = 1,
-      },
+      { "filename", path = 1 },
     },
   },
   options = {
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
-    theme = {
-      normal = { a = { gui = "standout" }, b = { bg = 0 }, c = { bg = 0 } },
-      insert = {
-        a = { fg = 4, gui = "standout" },
-        b = { bg = 0 },
-        c = { bg = 0 },
-      },
-      visual = {
-        a = { fg = 3, gui = "standout" },
-        b = { bg = 0 },
-        c = { bg = 0 },
-      },
-      terminal = {
-        a = { fg = 2, gui = "standout" },
-        b = { bg = 0 },
-        c = { bg = 0 },
-      },
-      command = {
-        a = { fg = 5, gui = "standout" },
-        b = { bg = 0 },
-        c = { bg = 0 },
-      },
-    },
   },
 })
 

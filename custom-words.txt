@@ -26,6 +26,7 @@ darazaki
 dcampos
 devicons
 dstein
+ellisonleao
 expandtab
 famiu
 feedkeys
@@ -38,6 +39,7 @@ fqbn
 gitsigns
 goimports
 gopls
+gruvbox
 hrsh
 isort
 jayp
