@@ -8,6 +8,7 @@ M.opt = {
   laststatus = 3,
   list = true,
   number = true,
+  pumheight = 10,
   relativenumber = true,
   shiftwidth = 4,
   showmode = false,
