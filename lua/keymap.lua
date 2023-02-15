@@ -266,12 +266,6 @@ M.keymaps = {
   },
 }
 
-local diagnostic_float_opts = {
-  source = "always",
-  scope = "line",
-  border = "rounded",
-}
-
 local function as_jump(f)
   return function()
     vim.cmd("normal m'")
@@ -284,25 +278,19 @@ M.lsp_keymaps = {
   {
     mode = "n",
     lhs = "gl",
-    rhs = function()
-      vim.diagnostic.open_float(diagnostic_float_opts)
-    end,
+    rhs = vim.diagnostic.open_float,
     desc = "Diagnostics on current line",
   },
   {
     mode = "n",
     lhs = "]d",
-    rhs = function()
-      vim.diagnostic.goto_next({ float = diagnostic_float_opts })
-    end,
+    rhs = vim.diagnostic.goto_next,
     desc = "Next diagnostic",
   },
   {
     mode = "n",
     lhs = "[d",
-    rhs = function()
-      vim.diagnostic.goto_prev({ float = diagnostic_float_opts })
-    end,
+    rhs = vim.diagnostic.goto_prev,
     desc = "Previous diagnostic",
   },
   {
