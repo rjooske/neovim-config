@@ -94,6 +94,7 @@ splitright
 startuptime
 stevearc
 storageclass
+strdisplaywidth
 stylua
 sumneko
 tabnext
