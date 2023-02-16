@@ -316,9 +316,6 @@ require("nvim-treesitter.configs").setup({
     },
   },
 })
--- vim.wo.foldmethod = "expr"
--- vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
--- vim.wo.foldenable = false
 
 local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
 ft_to_parser.zsh = "bash"
@@ -378,11 +375,7 @@ telescope.setup({
 })
 telescope.load_extension("fzf")
 
-local hop = require("hop")
-hop.setup()
-vim.keymap.set({ "n", "v" }, "<leader>h", function()
-  require("hop").hint_char2({})
-end)
+require("hop").setup()
 
 require("nvim-surround").setup({})
 

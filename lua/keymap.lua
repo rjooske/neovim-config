@@ -3,6 +3,7 @@ local M = {}
 local telescope_builtin = require("telescope.builtin")
 local snippy_mapping = require("snippy.mapping")
 local gitsigns = require("gitsigns")
+local hop = require("hop")
 
 M.leader = " "
 
@@ -263,6 +264,13 @@ M.keymaps = {
     lhs = "]h",
     rhs = gitsigns.next_hunk,
     desc = "Next hunk (Gitsigns)",
+  },
+
+  {
+    mode = { "n", "v" },
+    lhs = "<leader>h",
+    rhs = hop.hint_char2,
+    desc = "Hop to bigram (Hop)",
   },
 }
 
