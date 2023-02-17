@@ -147,13 +147,13 @@ M.keymaps = {
   {
     mode = "n",
     lhs = "[c",
-    rhs = "<cmd>cprevious<cr>",
+    rhs = "<cmd>cprevious<cr>zz",
     desc = "Previous quickfix",
   },
   {
     mode = "n",
     lhs = "]c",
-    rhs = "<cmd>cnext<cr>",
+    rhs = "<cmd>cnext<cr>zz",
     desc = "Next quickfix",
   },
 
