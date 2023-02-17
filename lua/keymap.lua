@@ -287,7 +287,13 @@ M.lsp_keymaps = {
     mode = "n",
     lhs = "gl",
     rhs = vim.diagnostic.open_float,
-    desc = "Diagnostics on current line",
+    desc = "Diagnostics on the current line",
+  },
+  {
+    mode = "n",
+    lhs = "[d",
+    rhs = vim.diagnostic.goto_prev,
+    desc = "Previous diagnostic",
   },
   {
     mode = "n",
@@ -297,10 +303,21 @@ M.lsp_keymaps = {
   },
   {
     mode = "n",
-    lhs = "[d",
-    rhs = vim.diagnostic.goto_prev,
-    desc = "Previous diagnostic",
+    lhs = "[e",
+    rhs = function()
+      vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+    end,
+    desc = "Previous error diagnostic",
   },
+  {
+    mode = "n",
+    lhs = "]e",
+    rhs = function()
+      vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+    end,
+    desc = "Next error diagnostic",
+  },
+
   {
     mode = "n",
     lhs = "K",
