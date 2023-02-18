@@ -276,6 +276,7 @@ require("nvim-treesitter.configs").setup({
     "comment",
     "cpp",
     "css",
+    "diff",
     "gitcommit",
     "gitignore",
     "html",
