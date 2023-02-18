@@ -3,6 +3,7 @@ atmega
 augroup
 autocmd
 autopairs
+bigram
 bufdelete
 bufferline
 bufnr
@@ -44,6 +45,7 @@ hrsh
 isort
 jayp
 jdtls
+jsonls
 keymap
 keymaps
 kyazdani
