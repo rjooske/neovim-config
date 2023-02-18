@@ -192,6 +192,7 @@ lspconfig.arduino_language_server.setup({
     "clangd",
   },
 })
+lspconfig.jsonls.setup({ on_attach = on_attach, capabilities = capabilities })
 
 local rust_tools = require("rust-tools")
 rust_tools.setup({
@@ -279,7 +280,6 @@ require("nvim-treesitter.configs").setup({
     "html",
     "java",
     "javascript",
-    "json",
     "jsonc",
     "latex",
     "lua",
@@ -320,6 +320,7 @@ require("nvim-treesitter.configs").setup({
 
 local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
 ft_to_parser.zsh = "bash"
+ft_to_parser.json = "jsonc"
 
 require("dressing").setup({
   input = { insert_only = false, win_options = { winblend = 0 } },
