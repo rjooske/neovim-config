@@ -76,6 +76,7 @@ postprocess
 preproc
 prettierd
 proto
+pumheight
 pylint
 pyright
 qflist
