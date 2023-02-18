@@ -193,6 +193,7 @@ lspconfig.arduino_language_server.setup({
   },
 })
 lspconfig.jsonls.setup({ on_attach = on_attach, capabilities = capabilities })
+lspconfig.marksman.setup({ on_attach = on_attach, capabilities = capabilities })
 
 local rust_tools = require("rust-tools")
 rust_tools.setup({
