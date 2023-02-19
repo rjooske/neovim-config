@@ -65,7 +65,7 @@ for _, v in ipairs(require("keymap").keymaps) do
   vim.keymap.set(v.mode, v.lhs, v.rhs, opts)
 end
 
-vim.keymap.set("n", "<leader>bd", function()
+vim.keymap.set("n", "<leader>d", function()
   local buftype = vim.api.nvim_buf_get_option(0, "buftype")
   local filetype = vim.api.nvim_buf_get_option(0, "filetype")
   local force = buftype == "terminal" or filetype == "netrw"
@@ -353,6 +353,7 @@ telescope.setup({
         ["<esc>"] = actions.close,
         ["<c-q>"] = actions.send_to_qflist,
         ["<m-q>"] = actions.send_selected_to_qflist,
+        ["<cr>"] = actions.select_default + actions.center,
       },
     },
     path_display = { "truncate" },

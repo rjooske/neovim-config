@@ -193,7 +193,7 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>fe",
+    lhs = "<leader>b",
     rhs = telescope_builtin.buffers,
     desc = "Find buffers (Telescope)",
   },
@@ -220,12 +220,6 @@ M.keymaps = {
     lhs = "<leader>fs",
     rhs = telescope_builtin.current_buffer_fuzzy_find,
     desc = "Find lines in current buffer (Telescope)",
-  },
-  {
-    mode = "n",
-    lhs = "<leader>fd",
-    rhs = telescope_builtin.diagnostics,
-    desc = "Find diagnostics (Telescope)",
   },
   {
     mode = "n",
@@ -329,6 +323,41 @@ M.lsp_keymaps = {
       vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
     end,
     desc = "Next error diagnostic",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fd",
+    rhs = telescope_builtin.diagnostics,
+    desc = "Find diagnostics (Telescope)",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fD",
+    rhs = function()
+      telescope_builtin.diagnostics({ bufnr = 0 })
+    end,
+    desc = "Find diagnostics in current buffer (Telescope)",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fe",
+    rhs = function()
+      telescope_builtin.diagnostics({
+        severity_limit = vim.diagnostic.severity.ERROR,
+      })
+    end,
+    desc = "Find error diagnostics (Telescope)",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fE",
+    rhs = function()
+      telescope_builtin.diagnostics({
+        bufnr = 0,
+        severity_limit = vim.diagnostic.severity.ERROR,
+      })
+    end,
+    desc = "Find error diagnostics in current buffer (Telescope)",
   },
 
   {
