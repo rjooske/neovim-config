@@ -291,6 +291,13 @@ M.keymaps = {
 ---@type Keymap[]
 M.lsp_keymaps = {
   {
+    mode = "i",
+    lhs = "<c-k>",
+    rhs = vim.lsp.buf.signature_help(),
+    desc = "Signature help",
+  },
+
+  {
     mode = "n",
     lhs = "gl",
     rhs = vim.diagnostic.open_float,
