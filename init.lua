@@ -175,6 +175,7 @@ lspconfig.clangd.setup({
 })
 lspconfig.pyright.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.tsserver.setup({ on_attach = on_attach, capabilities = capabilities })
+lspconfig.hls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.gopls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.jdtls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.arduino_language_server.setup({
@@ -265,6 +266,8 @@ null_ls.setup({
 
     null_ls.builtins.formatting.goimports,
 
+    null_ls.builtins.formatting.fourmolu,
+
     null_ls.builtins.formatting.taplo,
   },
 })
@@ -279,6 +282,7 @@ require("nvim-treesitter.configs").setup({
     "diff",
     "gitcommit",
     "gitignore",
+    "haskell",
     "html",
     "java",
     "javascript",
