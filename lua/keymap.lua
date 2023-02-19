@@ -293,7 +293,7 @@ M.lsp_keymaps = {
   {
     mode = "i",
     lhs = "<c-k>",
-    rhs = vim.lsp.buf.signature_help(),
+    rhs = vim.lsp.buf.signature_help,
     desc = "Signature help",
   },
 
