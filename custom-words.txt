@@ -12,7 +12,9 @@ bufs
 buftype
 builtins
 catppuccin
+cfirst
 clangd
+clast
 clippy
 cmdline
 cnext
