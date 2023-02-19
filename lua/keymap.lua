@@ -146,15 +146,27 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "[c",
+    lhs = "[q",
     rhs = "<cmd>cprevious<cr>zz",
     desc = "Previous quickfix",
   },
   {
     mode = "n",
-    lhs = "]c",
+    lhs = "]q",
     rhs = "<cmd>cnext<cr>zz",
     desc = "Next quickfix",
+  },
+  {
+    mode = "n",
+    lhs = "[Q",
+    rhs = "<cmd>cfirst<cr>zz",
+    desc = "First quickfix",
+  },
+  {
+    mode = "n",
+    lhs = "]Q",
+    rhs = "<cmd>clast<cr>zz",
+    desc = "Last quickfix",
   },
 
   {
@@ -223,6 +235,14 @@ M.keymaps = {
   },
   {
     mode = "n",
+    lhs = "<leader>fk",
+    rhs = function()
+      telescope_builtin.keymaps({ show_plug = false })
+    end,
+    desc = "Find keymaps (Telescope)",
+  },
+  {
+    mode = "n",
     lhs = "<leader>fu",
     rhs = telescope_builtin.resume,
     desc = "Resume Telescope session (Telescope)",
@@ -273,13 +293,6 @@ M.keymaps = {
     desc = "Hop to bigram (Hop)",
   },
 }
-
-local function as_jump(f)
-  return function()
-    vim.cmd("normal m'")
-    f()
-  end
-end
 
 ---@type Keymap[]
 M.lsp_keymaps = {
@@ -333,36 +346,36 @@ M.lsp_keymaps = {
   {
     mode = "n",
     lhs = "gd",
-    rhs = as_jump(telescope_builtin.lsp_definitions),
+    rhs = telescope_builtin.lsp_definitions,
     desc = "Definitions (Telescope)",
   },
   {
     mode = "n",
     lhs = "gi",
-    rhs = as_jump(telescope_builtin.lsp_implementations),
+    rhs = telescope_builtin.lsp_implementations,
     desc = "Implementations (Telescope)",
   },
   {
     mode = "n",
     lhs = "gr",
-    rhs = as_jump(telescope_builtin.lsp_references),
+    rhs = telescope_builtin.lsp_references,
     desc = "References (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<space>D",
-    rhs = as_jump(telescope_builtin.lsp_type_definitions),
+    lhs = "gy",
+    rhs = telescope_builtin.lsp_type_definitions,
     desc = "Type definitions (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<space>rn",
+    lhs = "<space>lr",
     rhs = vim.lsp.buf.rename,
     desc = "Rename",
   },
   {
     mode = "n",
-    lhs = "<space>ca",
+    lhs = "<space>la",
     rhs = vim.lsp.buf.code_action,
     desc = "Code action",
   },
