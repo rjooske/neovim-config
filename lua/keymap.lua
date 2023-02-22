@@ -79,7 +79,7 @@ M.keymaps = {
     mode = "n",
     lhs = "<leader><leader>yr",
     rhs = function()
-      vim.fn.setreg("*", vim.fn.expand("%"), "c")
+      vim.fn.setreg("*", vim.fn.expand("%:~:."), "c")
     end,
     desc = "Yank relative path of current file into `*` register",
   },
