@@ -38,6 +38,7 @@ foldenable
 foldexpr
 foldmethod
 folke
+fourmolu
 fqbn
 gitsigns
 goimports
