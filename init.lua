@@ -53,7 +53,6 @@ require("packer").startup(function(use)
   use("dstein64/vim-startuptime")
 end)
 
--- vim.cmd.colorscheme("rjooske")
 vim.cmd.colorscheme("gruvbox")
 
 vim.g.netrw_banner = 0
@@ -390,39 +389,6 @@ require("nvim-surround").setup({})
 
 require("gitsigns").setup({})
 
-local colors = require("gruvbox.palette").colors
-local lualine_theme = {
-  normal = {
-    a = { bg = colors.light4, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
-  },
-  insert = {
-    a = { bg = colors.bright_blue, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
-  },
-  visual = {
-    a = { bg = colors.bright_orange, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
-  },
-  replace = {
-    a = { bg = colors.bright_red, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
-  },
-  command = {
-    a = { bg = colors.bright_purple, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
-  },
-  terminal = {
-    a = { bg = colors.bright_green, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
-  },
-}
 require("lualine").setup({
   sections = {
     lualine_c = { { "filename", path = 1 } },
@@ -430,7 +396,7 @@ require("lualine").setup({
   options = {
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
-    theme = lualine_theme,
+    theme = require("style").lualine_theme,
   },
 })
 
