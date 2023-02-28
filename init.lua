@@ -79,18 +79,21 @@ for name, text in pairs(require("style").signs) do
   vim.fn.sign_define(name, { text = text, texthl = name })
 end
 
-local style_augroup = vim.api.nvim_create_augroup("RjooskeStyle", {})
 vim.api.nvim_create_autocmd("BufWinEnter", {
-  group = style_augroup,
-  callback = function()
-    local opts = require("indent").detect(0)
+  group = vim.api.nvim_create_augroup("DetectIndent", {}),
+  callback = function(event)
+    local buftype = vim.api.nvim_buf_get_option(event.buf, "buftype")
+    if buftype ~= "" then
+      return
+    end
+    local opts = require("indent").detect(event.buf)
     if opts == nil then
       return
     end
     for k, v in pairs(opts) do
-      vim.opt[k] = v
+      vim.bo[event.buf][k] = v
     end
-    vim.opt.listchars = require("style").listchars(opts.tabstop)
+    vim.opt_local.listchars = require("style").listchars(opts.tabstop)
   end,
 })
 
