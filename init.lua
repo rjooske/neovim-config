@@ -360,7 +360,7 @@ telescope.setup({
         ["<esc>"] = actions.close,
         ["<c-q>"] = actions.send_to_qflist,
         ["<m-q>"] = actions.send_selected_to_qflist,
-        ["<cr>"] = actions.select_default + actions.center,
+        -- ["<cr>"] = actions.select_default + actions.center,
       },
     },
     path_display = { "truncate" },
