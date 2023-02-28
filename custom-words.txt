@@ -62,6 +62,7 @@ lspkind
 lualine
 mapleader
 menuone
+mousescroll
 navic
 neovim
 netrw
