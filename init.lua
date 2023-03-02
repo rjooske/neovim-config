@@ -270,6 +270,7 @@ null_ls.setup({
     null_ls.builtins.formatting.goimports,
 
     null_ls.builtins.formatting.fourmolu,
+    null_ls.builtins.formatting.cabal_fmt,
 
     null_ls.builtins.formatting.taplo,
   },
