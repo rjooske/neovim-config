@@ -57,7 +57,7 @@ vim.cmd.colorscheme("gruvbox")
 
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
-vim.g.mousescroll = "ver:1,hor:1"
+vim.go.mousescroll = "ver:1,hor:1"
 
 vim.g.mapleader = require("keymap").leader
 for _, v in ipairs(require("keymap").keymaps) do
