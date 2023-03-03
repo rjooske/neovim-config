@@ -237,6 +237,12 @@ M.keymaps = {
   },
   {
     mode = "n",
+    lhs = "<leader>gs",
+    rhs = telescope_builtin.git_status,
+    desc = "Git status (Telescope)",
+  },
+  {
+    mode = "n",
     lhs = "<leader>fu",
     rhs = telescope_builtin.resume,
     desc = "Resume Telescope session (Telescope)",
