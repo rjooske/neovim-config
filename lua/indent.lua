@@ -49,7 +49,7 @@ end
 ---@param line string
 ---@param cfg OkIndentConfig
 ---@return VimIndentOptions?
-local function detect_opts(line, cfg)
+local function detect_tab_or_spaces(line, cfg)
   if detect_tab(line) then
     return {
       expandtab = false,
@@ -66,7 +66,7 @@ end
 ---@param bufnr integer
 ---@param max_line_len integer
 ---@return fun(): string?
-local function iterate_buf_lines(bufnr, max_line_len)
+local function iterate_over_buffer_lines(bufnr, max_line_len)
   local line_count = vim.api.nvim_buf_line_count(bufnr)
   local i = 0
   return function()
@@ -91,8 +91,8 @@ M.detect = function(bufnr)
     space_widths = { 4, 2 },
   }
   local max_space_width = cfg.space_widths[1]
-  for line in iterate_buf_lines(bufnr, max_space_width) do
-    local opts = detect_opts(line, cfg)
+  for line in iterate_over_buffer_lines(bufnr, max_space_width + 1) do
+    local opts = detect_tab_or_spaces(line, cfg)
     if opts ~= nil then
       return opts
     end
