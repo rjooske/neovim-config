@@ -110,6 +110,12 @@ M.keymaps = {
   },
   {
     mode = "t",
+    lhs = "<esc>",
+    rhs = [[<c-\><c-n>]],
+    desc = "Leave terminal mode",
+  },
+  {
+    mode = "t",
     lhs = "<c-h>",
     rhs = "<c-\\><c-n><cmd>wincmd h<cr>",
     desc = "Window to the left",
