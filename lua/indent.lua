@@ -28,11 +28,15 @@ local function detect_tab(line)
   return string.sub(line, 1, 1) == "\t"
 end
 
----@param s string
----@param n integer
+---@param line string
+---@param width integer
 ---@return boolean
-local function starts_with_n_spaces(s, n)
-  return string.sub(s, 1, n) == string.rep(" ", n)
+local function detect_space(line, width)
+  if #line < width + 1 then
+    return false
+  end
+  return string.sub(line, 1, width) == string.rep(" ", width)
+    and string.sub(line, width + 1, width + 1) ~= " "
 end
 
 ---@param line string
@@ -40,7 +44,7 @@ end
 ---@return integer?
 local function detect_spaces(line, widths)
   for _, w in ipairs(widths) do
-    if starts_with_n_spaces(line, w) then
+    if detect_space(line, w) then
       return w
     end
   end
