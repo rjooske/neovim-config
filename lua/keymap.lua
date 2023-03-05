@@ -117,25 +117,25 @@ M.keymaps = {
   {
     mode = "t",
     lhs = "<c-h>",
-    rhs = "<c-\\><c-n><cmd>wincmd h<cr>",
+    rhs = [[<c-\><c-n><cmd>wincmd h<cr>]],
     desc = "Window to the left",
   },
   {
     mode = "t",
     lhs = "<c-j>",
-    rhs = "<c-\\><c-n><cmd>wincmd j<cr>",
+    rhs = [[<c-\><c-n><cmd>wincmd j<cr>]],
     desc = "Window below",
   },
   {
     mode = "t",
     lhs = "<c-k>",
-    rhs = "<c-\\><c-n><cmd>wincmd k<cr>",
+    rhs = [[<c-\><c-n><cmd>wincmd k<cr>]],
     desc = "Window above",
   },
   {
     mode = "t",
     lhs = "<c-l>",
-    rhs = "<c-\\><c-n><cmd>wincmd l<cr>",
+    rhs = [[<c-\><c-n><cmd>wincmd l<cr>]],
     desc = "Window to the right",
   },
   {
