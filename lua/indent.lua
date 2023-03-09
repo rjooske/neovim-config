@@ -45,7 +45,7 @@ end
 ---@param line string
 ---@param widths integer[] Must be sorted in descending order.
 ---@return integer?
-local function detect_spaces(line, widths)
+M.detect_spaces = function(line, widths)
   for _, w in ipairs(widths) do
     if detect_space(line, w) then
       return w
@@ -64,7 +64,7 @@ local function detect_tab_or_spaces(line, cfg)
       tabstop = cfg.tab_width,
     }
   end
-  local w = detect_spaces(line, cfg.space_widths)
+  local w = M.detect_spaces(line, cfg.space_widths)
   if w ~= nil then
     return { expandtab = true, shiftwidth = w, tabstop = w }
   end
