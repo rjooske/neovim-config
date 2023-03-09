@@ -24,7 +24,10 @@ end
 
 ---@param line string
 ---@return boolean
-local function detect_tab(line)
+M.detect_tab = function(line)
+  if #line < 2 then
+    return false
+  end
   return string.sub(line, 1, 1) == "\t"
 end
 
@@ -54,7 +57,7 @@ end
 ---@param cfg OkIndentConfig
 ---@return VimIndentOptions?
 local function detect_tab_or_spaces(line, cfg)
-  if detect_tab(line) then
+  if M.detect_tab(line) then
     return {
       expandtab = false,
       shiftwidth = cfg.tab_width,
