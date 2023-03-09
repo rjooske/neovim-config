@@ -249,6 +249,47 @@ M.keymaps = {
   },
   {
     mode = "n",
+    lhs = "<leader>fd",
+    rhs = telescope_builtin.diagnostics,
+    desc = "Find diagnostics (Telescope)",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fD",
+    rhs = function()
+      telescope_builtin.diagnostics({ bufnr = 0 })
+    end,
+    desc = "Find diagnostics in current buffer (Telescope)",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fe",
+    rhs = function()
+      telescope_builtin.diagnostics({
+        severity_limit = vim.diagnostic.severity.ERROR,
+      })
+    end,
+    desc = "Find error diagnostics (Telescope)",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fE",
+    rhs = function()
+      telescope_builtin.diagnostics({
+        bufnr = 0,
+        severity_limit = vim.diagnostic.severity.ERROR,
+      })
+    end,
+    desc = "Find error diagnostics in current buffer (Telescope)",
+  },
+  {
+    mode = "n",
+    lhs = "<leader>fy",
+    rhs = telescope_builtin.lsp_dynamic_workspace_symbols,
+    desc = "Query workspace symbols (Telescope)",
+  },
+  {
+    mode = "n",
     lhs = "<leader>fu",
     rhs = telescope_builtin.resume,
     desc = "Resume Telescope session (Telescope)",
@@ -343,41 +384,6 @@ M.lsp_keymaps = {
     end,
     desc = "Next error diagnostic",
   },
-  {
-    mode = "n",
-    lhs = "<leader>fd",
-    rhs = telescope_builtin.diagnostics,
-    desc = "Find diagnostics (Telescope)",
-  },
-  {
-    mode = "n",
-    lhs = "<leader>fD",
-    rhs = function()
-      telescope_builtin.diagnostics({ bufnr = 0 })
-    end,
-    desc = "Find diagnostics in current buffer (Telescope)",
-  },
-  {
-    mode = "n",
-    lhs = "<leader>fe",
-    rhs = function()
-      telescope_builtin.diagnostics({
-        severity_limit = vim.diagnostic.severity.ERROR,
-      })
-    end,
-    desc = "Find error diagnostics (Telescope)",
-  },
-  {
-    mode = "n",
-    lhs = "<leader>fE",
-    rhs = function()
-      telescope_builtin.diagnostics({
-        bufnr = 0,
-        severity_limit = vim.diagnostic.severity.ERROR,
-      })
-    end,
-    desc = "Find error diagnostics in current buffer (Telescope)",
-  },
 
   {
     mode = "n",
@@ -426,12 +432,6 @@ M.lsp_keymaps = {
     lhs = "<space>la",
     rhs = vim.lsp.buf.code_action,
     desc = "Code action",
-  },
-  {
-    mode = "n",
-    lhs = "<leader>fy",
-    rhs = telescope_builtin.lsp_dynamic_workspace_symbols,
-    desc = "Query workspace symbols (Telescope)",
   },
 }
 
