@@ -351,8 +351,8 @@ require("Comment").setup({
 
 require("nvim-autopairs").setup({ check_ts = true })
 
-local telescope = require("telescope")
 local actions = require("telescope.actions")
+local telescope = require("telescope")
 telescope.setup({
   defaults = {
     file_ignore_patterns = { "^.git/" },
