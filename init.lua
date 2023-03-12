@@ -298,6 +298,7 @@ require("nvim-treesitter.configs").setup({
     "markdown_inline",
     "proto",
     "python",
+    "regex",
     "rust",
     "scss",
     "sql",
