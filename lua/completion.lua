@@ -65,7 +65,7 @@ M.setup = function()
 
   cmp.setup.cmdline({ "/", "?" }, {
     mapping = cmp.mapping.preset.cmdline(),
-    sources = { source_all_buffers },
+    sources = { { name = "buffer" } },
     -- NOT select the first entry automatically
     completion = { completeopt = "menu,preview,noselect" },
   })
