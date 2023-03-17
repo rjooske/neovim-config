@@ -98,12 +98,23 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   end,
 })
 
-local function format(bufnr)
+---@param ft string
+---@return string?
+local function filetype_to_formatter(ft)
+  if ft == "rust" then
+    return "rust_analyzer"
+  else
+    return "null-ls"
+  end
+end
+
+---@param bufnr integer
+---@param client_name string
+local function format_with(bufnr, client_name)
   vim.lsp.buf.format({
     bufnr = bufnr,
-    timeout_ms = 5000,
     filter = function(client)
-      return client.name == "null-ls"
+      return client.name == client_name
     end,
   })
 end
@@ -111,8 +122,13 @@ end
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("FormatOnSave", {}),
   callback = function(event)
-    if #vim.lsp.get_active_clients({ bufnr = event.buf }) > 0 then
-      format(event.buf)
+    if #vim.lsp.get_active_clients({ bufnr = event.buf }) == 0 then
+      return
+    end
+    local ft = vim.api.nvim_buf_get_option(event.buf, "filetype")
+    local f = filetype_to_formatter(ft)
+    if f ~= nil then
+      format_with(event.buf, f)
     end
   end,
 })
