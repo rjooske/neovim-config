@@ -24,11 +24,15 @@ M.setup = function()
       end,
     },
     formatting = {
-      format = lspkind.cmp_format({
-        mode = "symbol_text",
-        maxwidth = 50,
-        ellipsis_char = "...",
-      }),
+      format = function(entry, item)
+        local t = lspkind.cmp_format({
+          mode = "symbol_text",
+          maxwidth = 40,
+          ellipsis_char = "…",
+        })(entry, item)
+        t.menu = ""
+        return t
+      end,
     },
     mapping = {
       ["<c-space>"] = { i = cmp.mapping.complete() },
