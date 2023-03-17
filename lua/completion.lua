@@ -8,7 +8,6 @@ local select_prev =
   cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
 local select_next =
   cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
-local confirm = cmp.mapping.confirm({ select = false })
 
 -- Grabs words from all the open buffers
 local source_all_buffers = {
@@ -40,7 +39,7 @@ M.setup = function()
       ["<c-n>"] = { i = select_next },
       ["<up>"] = { i = select_prev },
       ["<down>"] = { i = select_next },
-      ["<cr>"] = { i = confirm },
+      ["<cr>"] = { i = cmp.mapping.confirm({ select = false }) },
       ["<c-e>"] = { i = cmp.mapping.abort() },
       ["<c-u>"] = { i = cmp.mapping.scroll_docs(-4) },
       ["<c-d>"] = { i = cmp.mapping.scroll_docs(4) },
