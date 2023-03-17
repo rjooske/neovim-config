@@ -10,14 +10,10 @@ local select_next =
   cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
 local confirm = cmp.mapping.confirm({ select = false })
 
--- Grab words from all the open buffers
-local source_buffer = {
+-- Grabs words from all the open buffers
+local source_all_buffers = {
   name = "buffer",
-  option = {
-    get_bufnrs = function()
-      return vim.api.nvim_list_bufs()
-    end,
-  },
+  option = { get_bufnrs = vim.api.nvim_list_bufs },
 }
 
 M.setup = function()
@@ -48,7 +44,7 @@ M.setup = function()
     sources = cmp.config.sources({
       { name = "nvim_lsp" },
       { name = "snippy" },
-    }, { source_buffer }),
+    }, { source_all_buffers }),
     -- Select the first entry automatically
     completion = { completeopt = "menu,menuone,noinsert" },
     -- Ignore preselect requests from language servers
@@ -65,7 +61,7 @@ M.setup = function()
 
   cmp.setup.cmdline({ "/", "?" }, {
     mapping = cmp.mapping.preset.cmdline(),
-    sources = { source_buffer },
+    sources = { source_all_buffers },
     -- NOT select the first entry automatically
     completion = { completeopt = "menu,preview,noselect" },
   })
