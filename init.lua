@@ -1,57 +1,57 @@
-require("packer").startup(function(use)
-  use("wbthomason/packer.nvim")
+require("paq")({
+  "savq/paq-nvim",
 
-  use("neovim/nvim-lspconfig")
-  use({
-    "jose-elias-alvarez/null-ls.nvim",
-    requires = "nvim-lua/plenary.nvim",
-  })
+  -- Common dependencies
+  "nvim-lua/plenary.nvim",
+  "nvim-tree/nvim-web-devicons",
 
-  use("hrsh7th/cmp-nvim-lsp")
-  use("hrsh7th/cmp-buffer")
-  use("hrsh7th/cmp-path")
-  use("hrsh7th/cmp-cmdline")
-  use("hrsh7th/nvim-cmp")
-  use("dcampos/nvim-snippy")
-  use("dcampos/cmp-snippy")
-  use("onsails/lspkind.nvim")
+  -- Language servers
+  "neovim/nvim-lspconfig",
+  "jose-elias-alvarez/null-ls.nvim",
+  "simrat39/rust-tools.nvim",
 
-  use("simrat39/rust-tools.nvim")
+  -- Completion
+  "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-path",
+  "hrsh7th/cmp-cmdline",
+  "hrsh7th/nvim-cmp",
+  "dcampos/nvim-snippy",
+  "dcampos/cmp-snippy",
+  "onsails/lspkind.nvim",
 
-  use({
+  -- Editing
+  "phaazon/hop.nvim",
+  "numToStr/Comment.nvim",
+  "windwp/nvim-autopairs",
+  "kylechui/nvim-surround",
+
+  -- Telescope
+  "nvim-telescope/telescope.nvim",
+  { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+
+  -- Git
+  "tpope/vim-fugitive",
+  "lewis6991/gitsigns.nvim",
+
+  -- Colorscheme
+  "ellisonleao/gruvbox.nvim",
+
+  -- Bling
+  {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
-  })
-  use("SmiteshP/nvim-navic")
-  use("stevearc/dressing.nvim")
-  use("nvim-tree/nvim-web-devicons")
-  use({
-    "nvim-lualine/lualine.nvim",
-    requires = { "kyazdani42/nvim-web-devicons" },
-  })
+    run = function()
+      vim.cmd("TSUpdate")
+    end,
+  },
+  "SmiteshP/nvim-navic",
+  "stevearc/dressing.nvim",
+  "nvim-lualine/lualine.nvim",
 
-  use("ellisonleao/gruvbox.nvim")
-
-  use({
-    "nvim-telescope/telescope.nvim",
-    requires = {
-      { "nvim-lua/plenary.nvim" },
-      { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-    },
-  })
-
-  use("tpope/vim-fugitive")
-  use("lewis6991/gitsigns.nvim")
-
-  use("famiu/bufdelete.nvim")
-
-  use("windwp/nvim-autopairs")
-  use("numToStr/Comment.nvim")
-  use("phaazon/hop.nvim")
-  use("kylechui/nvim-surround")
-
-  use("dstein64/vim-startuptime")
-end)
+  -- Misc
+  "famiu/bufdelete.nvim",
+  "dstein64/vim-startuptime",
+})
 
 vim.cmd.colorscheme("gruvbox")
 
