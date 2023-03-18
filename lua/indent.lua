@@ -24,7 +24,7 @@ end
 
 ---@param line string
 ---@return boolean
-M.detect_tab = function(line)
+local function detect_tab(line)
   if #line < 2 then
     return false
   end
@@ -45,7 +45,7 @@ end
 ---@param line string
 ---@param widths integer[] Must be sorted in descending order.
 ---@return integer?
-M.detect_spaces = function(line, widths)
+local function detect_spaces(line, widths)
   for _, w in ipairs(widths) do
     if detect_space(line, w) then
       return w
@@ -57,14 +57,14 @@ end
 ---@param cfg OkIndentConfig
 ---@return VimIndentOptions?
 local function detect_tab_or_spaces(line, cfg)
-  if M.detect_tab(line) then
+  if detect_tab(line) then
     return {
       expandtab = false,
       shiftwidth = cfg.tab_width,
       tabstop = cfg.tab_width,
     }
   end
-  local w = M.detect_spaces(line, cfg.space_widths)
+  local w = detect_spaces(line, cfg.space_widths)
   if w ~= nil then
     return { expandtab = true, shiftwidth = w, tabstop = w }
   end
@@ -105,5 +105,10 @@ M.detect = function(bufnr)
     end
   end
 end
+
+M.exported_for_testing = {
+  detect_tab = detect_tab,
+  detect_spaces = detect_spaces,
+}
 
 return M

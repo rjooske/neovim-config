@@ -1,4 +1,4 @@
-local sut = require("indent")
+local sut = require("indent").exported_for_testing
 
 ---@param s string
 ---@return string
