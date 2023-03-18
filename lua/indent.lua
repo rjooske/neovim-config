@@ -109,6 +109,7 @@ end
 M.exported_for_testing = {
   detect_tab = detect_tab,
   detect_spaces = detect_spaces,
+  detect_tab_or_spaces = detect_tab_or_spaces,
 }
 
 return M
