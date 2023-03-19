@@ -98,7 +98,7 @@ describe("detect indents:", function()
       {
         input = {
           line = "   who uses 3 spaces?",
-          config = { tab_width = 3, space_widths = { 4, 3, 2 } },
+          config = { tab_width = 4, space_widths = { 4, 3, 2 } },
         },
         want = { expandtab = true, shiftwidth = 3, tabstop = 3 },
       },
@@ -106,6 +106,102 @@ describe("detect indents:", function()
     for _, test in ipairs(tests) do
       assert.same(
         sut.detect_tab_or_spaces(test.input.line, test.input.config),
+        test.want
+      )
+    end
+  end)
+end)
+
+describe("find indents in buffers:", function()
+  ---@generic T
+  ---@param arr T[]
+  ---@return fun(): T?
+  local function ipairs_without_indices(arr)
+    local i = 1
+    return function()
+      if i == #arr + 1 then
+        return
+      end
+      local t = arr[i]
+      i = i + 1
+      return t
+    end
+  end
+
+  it("no indents; no vim options", function()
+    local tests = {
+      {
+        lines = {
+          "lorem",
+          "ipsum",
+          "dolor",
+          "sit",
+        },
+        config = { tab_width = 4, space_widths = { 4, 2 } },
+      },
+      {
+        lines = {
+          " \tdoes not",
+          "   contain",
+          "the kind of indents",
+          "      we're looking for",
+        },
+        config = { tab_width = 4, space_widths = { 8, 4, 2 } },
+      },
+    }
+    for _, test in ipairs(tests) do
+      assert.equals(
+        sut.find_first_indent(ipairs_without_indices(test.lines), test.config),
+        nil
+      )
+    end
+  end)
+
+  it("find the first indented line, top to bottom", function()
+    local tests = {
+      {
+        input = {
+          lines = {
+            'if __name__ == "__main__":',
+            '    print("4 spaces here")',
+          },
+          config = { tab_width = 4, space_widths = { 4, 2 } },
+        },
+        want = { expandtab = true, shiftwidth = 4, tabstop = 4 },
+      },
+      {
+        input = {
+          lines = {
+            "#include <stdio.h>",
+            "/*",
+            " * <- This single space here doesn't count",
+            " */",
+            "int main() {",
+            '  printf("hi");',
+            "}",
+          },
+          config = { tab_width = 4, space_widths = { 4, 2 } },
+        },
+        want = { expandtab = true, shiftwidth = 2, tabstop = 2 },
+      },
+      {
+        input = {
+          lines = {
+            "func DoGophersUseTabs() bool {",
+            "\treturn true",
+            "}",
+          },
+          config = { tab_width = 4, space_widths = { 4, 2 } },
+        },
+        want = { expandtab = false, shiftwidth = 4, tabstop = 4 },
+      },
+    }
+    for _, test in ipairs(tests) do
+      assert.same(
+        sut.find_first_indent(
+          ipairs_without_indices(test.input.lines),
+          test.input.config
+        ),
         test.want
       )
     end
