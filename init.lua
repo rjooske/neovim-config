@@ -98,16 +98,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   end,
 })
 
----@param ft string
----@return string?
-local function filetype_to_formatter(ft)
-  if ft == "rust" then
-    return "rust_analyzer"
-  else
-    return "null-ls"
-  end
-end
-
 ---@param bufnr integer
 ---@param client_name string
 local function format_with(bufnr, client_name)
@@ -122,14 +112,7 @@ end
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("FormatOnSave", {}),
   callback = function(event)
-    if #vim.lsp.get_active_clients({ bufnr = event.buf }) == 0 then
-      return
-    end
-    local ft = vim.api.nvim_buf_get_option(event.buf, "filetype")
-    local f = filetype_to_formatter(ft)
-    if f ~= nil then
-      format_with(event.buf, f)
-    end
+    format_with(event.buf, "null-ls")
   end,
 })
 
@@ -142,7 +125,7 @@ local function on_attach(client, bufnr)
 
   if client.name == "null-ls" then
     map("n", "<leader>lf", function()
-      format(bufnr)
+      format_with(bufnr, "null-ls")
     end, { desc = "Format" })
   end
 
