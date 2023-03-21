@@ -9,8 +9,8 @@ local M = {}
 ---@field tab_width integer
 ---@field space_widths integer[]
 
----@param arr number[]
----@return number[]
+---@param arr integer[]
+---@return integer[]
 local function sorted_descending(arr)
   local res = {}
   for _, v in ipairs(arr) do
@@ -107,12 +107,12 @@ local function iterate_over_buffer_lines(bufnr, max_line_len)
 end
 
 ---@param bufnr integer
+---@param cfg OkIndentConfig
 ---@return VimIndentOptions?
-M.detect = function(bufnr)
-  ---@type OkIndentConfig
-  local cfg = {
-    tab_width = 4,
-    space_widths = { 4, 2 },
+M.detect = function(bufnr, cfg)
+  cfg = {
+    tab_width = cfg.tab_width,
+    space_widths = sorted_descending(cfg.space_widths),
   }
   local max_space_width = cfg.space_widths[1]
   return find_first_indent(

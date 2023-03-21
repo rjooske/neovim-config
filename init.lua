@@ -87,7 +87,10 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     if buftype ~= "" then
       return
     end
-    local opts = require("indent").detect(event.buf)
+    local opts = require("indent").detect(
+      event.buf,
+      { tab_width = 4, space_widths = { 2, 4 } }
+    )
     if opts == nil then
       return
     end
