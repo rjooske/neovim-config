@@ -115,6 +115,9 @@ end
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("FormatOnSave", {}),
   callback = function(event)
+    if #vim.lsp.get_active_clients({ bufnr = event.buf }) == 0 then
+      return
+    end
     format_with(event.buf, "null-ls")
   end,
 })
