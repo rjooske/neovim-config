@@ -310,6 +310,7 @@ require("nvim-treesitter.configs").setup({
     "scss",
     "sql",
     "toml",
+    "tsx",
     "typescript",
     "vim",
   },
@@ -373,7 +374,7 @@ telescope.setup({
       },
     },
     path_display = { "truncate" },
-    layout_strategy = "vertical",
+    -- layout_strategy = "vertical",
     preview = { filesize_limit = 1 }, -- 1 MB
   },
   pickers = {
