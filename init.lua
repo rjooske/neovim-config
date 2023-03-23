@@ -294,6 +294,7 @@ require("nvim-treesitter.configs").setup({
     "gitignore",
     "go",
     "haskell",
+    "help",
     "html",
     "java",
     "javascript",
