@@ -292,6 +292,7 @@ require("nvim-treesitter.configs").setup({
     "fennel",
     "gitcommit",
     "gitignore",
+    "go",
     "haskell",
     "html",
     "java",
