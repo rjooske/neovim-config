@@ -1,7 +1,7 @@
 {
   "flagWords": [],
-  "version": "0.2",
   "language": "en",
+  "version": "0.2",
   "words": [
     "atmega",
     "augroup",
@@ -83,7 +83,9 @@
     "relativenumber",
     "rjooske",
     "rustfmt",
+    "savq",
     "setreg",
+    "shellescape",
     "shiftwidth",
     "showmode",
     "signcolumn",
