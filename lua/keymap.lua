@@ -146,6 +146,7 @@ M.keymaps = {
     rhs = [[<c-\><c-n><cmd>wincmd l<cr>]],
     desc = "Window to the right",
   },
+
   {
     mode = "n",
     lhs = "[t",
@@ -158,6 +159,19 @@ M.keymaps = {
     rhs = "<cmd>tabnext<cr>",
     desc = "Next tab page",
   },
+  {
+    mode = "n",
+    lhs = "[T",
+    rhs = "<cmd>tabmove -1<cr>",
+    desc = "Move the tab page to the left",
+  },
+  {
+    mode = "n",
+    lhs = "]T",
+    rhs = "<cmd>tabmove +1<cr>",
+    desc = "Move the tab page to the right",
+  },
+
   {
     mode = "n",
     lhs = "[q",
