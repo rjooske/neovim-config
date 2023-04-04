@@ -112,6 +112,7 @@ local function format_with(bufnr, client_name)
   })
 end
 
+-- Format on save if we have language servers attached to the buffer
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("FormatOnSave", {}),
   callback = function(event)
@@ -119,6 +120,13 @@ vim.api.nvim_create_autocmd("BufWritePre", {
       return
     end
     format_with(event.buf, "null-ls")
+  end,
+})
+
+-- Make `gq` work by removing `formatexpr` that gets added automatically
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    vim.bo[args.buf].formatexpr = nil
   end,
 })
 
