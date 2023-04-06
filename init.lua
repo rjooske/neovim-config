@@ -296,6 +296,7 @@ require("nvim-treesitter.configs").setup({
     "comment",
     "cpp",
     "css",
+    "dart",
     "diff",
     "fennel",
     "gitcommit",
