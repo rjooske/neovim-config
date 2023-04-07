@@ -64,6 +64,13 @@ M.keymaps = {
     desc = "Clear search highlights",
   },
   {
+    mode = "x",
+    lhs = "/",
+    rhs = [[<esc>/\%V]],
+    desc = "Search within visual selection",
+  },
+
+  {
     mode = { "n", "v" },
     lhs = "<leader>y",
     rhs = '"*y',
