@@ -42,6 +42,7 @@
     "hrsh",
     "isort",
     "jdtls",
+    "jsdoc",
     "jsonls",
     "keymap",
     "keymap",
