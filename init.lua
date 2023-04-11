@@ -137,6 +137,9 @@ local function on_attach(client, bufnr)
     vim.keymap.set(mode, lhs, rhs, opts)
   end
 
+  -- Disable semantic tokens
+  client.server_capabilities.semanticTokensProvider = nil
+
   if client.name == "null-ls" then
     map("n", "<leader>lf", function()
       format_with(bufnr, "null-ls")
@@ -303,7 +306,6 @@ require("nvim-treesitter.configs").setup({
     "gitignore",
     "go",
     "haskell",
-    "help",
     "html",
     "java",
     "javascript",
@@ -323,6 +325,7 @@ require("nvim-treesitter.configs").setup({
     "tsx",
     "typescript",
     "vim",
+    "vimdoc",
   },
   sync_install = false,
   highlight = {
@@ -347,9 +350,8 @@ require("nvim-treesitter.configs").setup({
   },
 })
 
-local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
-ft_to_parser.zsh = "bash"
-ft_to_parser.json = "jsonc"
+vim.treesitter.language.register("bash", "zsh")
+vim.treesitter.language.register("jsonc", "json")
 
 require("dressing").setup({
   input = { insert_only = false, win_options = { winblend = 0 } },
