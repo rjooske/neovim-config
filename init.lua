@@ -125,10 +125,15 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
--- Make `gq` work by removing `formatexpr` that gets added automatically
 vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("LspPreferences", {}),
   callback = function(args)
+    -- Make `gq` work by removing `formatexpr` that gets added automatically
     vim.bo[args.buf].formatexpr = nil
+
+    -- Disable semantic tokens
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    client.server_capabilities.semanticTokensProvider = nil
   end,
 })
 
@@ -138,9 +143,6 @@ local function on_attach(client, bufnr)
     opts.buffer = bufnr
     vim.keymap.set(mode, lhs, rhs, opts)
   end
-
-  -- Disable semantic tokens
-  client.server_capabilities.semanticTokensProvider = nil
 
   if client.name == "null-ls" then
     map("n", "<leader>lf", function()
