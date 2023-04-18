@@ -6,6 +6,7 @@
     "augroup",
     "autocmd",
     "autopairs",
+    "backupcopy",
     "bigram",
     "bufdelete",
     "bufnr",
