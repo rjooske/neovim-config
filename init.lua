@@ -55,6 +55,8 @@ require("paq")({
 
 vim.cmd.colorscheme("gruvbox")
 
+vim.go.backupcopy = "yes"
+
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
 vim.go.mousescroll = "ver:1,hor:1"
