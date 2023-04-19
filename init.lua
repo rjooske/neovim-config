@@ -108,6 +108,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 local function format_with(bufnr, client_name)
   vim.lsp.buf.format({
     bufnr = bufnr,
+    timeout_ms = 5000,
     filter = function(client)
       return client.name == client_name
     end,
