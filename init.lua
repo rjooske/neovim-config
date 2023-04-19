@@ -305,6 +305,7 @@ require("nvim-treesitter.configs").setup({
     "css",
     "dart",
     "diff",
+    "dockerfile",
     "fennel",
     "gitcommit",
     "gitignore",
@@ -317,6 +318,7 @@ require("nvim-treesitter.configs").setup({
     "jsonc",
     "latex",
     "lua",
+    "luadoc",
     "make",
     "markdown",
     "markdown_inline",
@@ -355,7 +357,7 @@ require("nvim-treesitter.configs").setup({
   },
 })
 
-vim.treesitter.language.register("bash", "zsh")
+vim.treesitter.language.register("bash", { "sh", "zsh" })
 vim.treesitter.language.register("jsonc", "json")
 
 require("dressing").setup({
