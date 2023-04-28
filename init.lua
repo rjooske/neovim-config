@@ -365,8 +365,6 @@ vim.treesitter.language.register("jsonc", "json")
 
 require("dressing").setup({
   input = { insert_only = false, win_options = { winblend = 0 } },
-  select = { nui = { win_options = { winblend = 0 } } },
-  builtin = { win_options = { winblend = 0 } },
 })
 
 require("Comment").setup({
