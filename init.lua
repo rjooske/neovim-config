@@ -260,8 +260,6 @@ null_ls.setup({
     }),
     null_ls.builtins.code_actions.cspell,
 
-    null_ls.builtins.diagnostics.vale.with({ extra_filetypes = { "text" } }),
-
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.diagnostics.selene.with({
       condition = function(utils)
