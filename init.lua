@@ -435,3 +435,5 @@ require("lualine").setup({
 require("completion").setup()
 
 vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
+
+require("tally").setup()
