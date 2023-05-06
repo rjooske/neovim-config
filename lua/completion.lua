@@ -15,6 +15,18 @@ local source_all_buffers = {
   option = { get_bufnrs = vim.api.nvim_list_bufs },
 }
 
+---@param s string
+---@param max_len integer
+---@return string
+local function ellipsize(s, max_len)
+  local ellipsis = "…"
+  if #s > max_len then
+    return s:sub(1, max_len - #ellipsis) .. ellipsis
+  else
+    return s
+  end
+end
+
 M.setup = function()
   cmp.setup({
     snippet = {
@@ -29,7 +41,9 @@ M.setup = function()
           maxwidth = 40,
           ellipsis_char = "…",
         })(entry, item)
-        t.menu = ""
+        if t.menu ~= nil then
+          t.menu = ellipsize(t.menu, 40)
+        end
         return t
       end,
     },
