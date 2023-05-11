@@ -328,12 +328,12 @@ require("nvim-treesitter.configs").setup({
     "regex",
     "rust",
     "scss",
-    "sql",
     "toml",
     "tsx",
     "typescript",
     "vim",
     "vimdoc",
+    -- "sql", -- a bit buggy
   },
   sync_install = false,
   highlight = {
