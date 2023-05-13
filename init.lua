@@ -171,23 +171,7 @@ vim.diagnostic.config({
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local lspconfig = require("lspconfig")
-lspconfig.lua_ls.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    Lua = {
-      runtime = { version = "LuaJIT" },
-      diagnostics = { globals = { "vim", "describe", "it" } },
-      workspace = {
-        checkThirdParty = false,
-        library = {
-          vim.fn.expand("$VIMRUNTIME/lua"),
-          -- require("packer").config.package_root,
-        },
-      },
-    },
-  },
-})
+lspconfig.lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.clangd.setup({
   filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
   on_attach = on_attach,
