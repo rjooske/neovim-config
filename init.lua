@@ -23,7 +23,6 @@ require("paq")({
   -- Editing
   "phaazon/hop.nvim",
   "numToStr/Comment.nvim",
-  "windwp/nvim-autopairs",
   "kylechui/nvim-surround",
 
   -- Telescope
@@ -359,8 +358,6 @@ require("Comment").setup({
     block = "<leader>?",
   },
 })
-
-require("nvim-autopairs").setup({ check_ts = true })
 
 local actions = require("telescope.actions")
 local telescope = require("telescope")
