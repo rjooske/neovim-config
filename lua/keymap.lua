@@ -71,25 +71,25 @@ M.keymaps = {
   },
 
   {
-    mode = { "n", "v" },
+    mode = { "n", "x" },
     lhs = "<leader>y",
     rhs = '"*y',
     desc = "`y` with `*` register",
   },
   {
-    mode = { "n", "v" },
+    mode = { "n", "x" },
     lhs = "<leader>Y",
     rhs = '"*Y',
     desc = "`Y` with `*` register",
   },
   {
-    mode = { "n", "v" },
+    mode = { "n", "x" },
     lhs = "<leader>p",
     rhs = '"*p',
     desc = "`p` with `*` register",
   },
   {
-    mode = { "n", "v" },
+    mode = { "n", "x" },
     lhs = "<leader>P",
     rhs = '"*P',
     desc = "`P` with `*` register",
@@ -233,13 +233,13 @@ M.keymaps = {
   },
 
   {
-    mode = "",
+    mode = { "n", "x", "o", "t" },
     lhs = "H",
     rhs = "^",
     desc = "First non-blank character in current line",
   },
   {
-    mode = "",
+    mode = { "n", "x", "o", "t" },
     lhs = "L",
     rhs = "g_",
     desc = "Last non-blank character in current line",
@@ -429,7 +429,7 @@ M.keymaps = {
   },
 
   {
-    mode = { "n", "v" },
+    mode = { "n", "x" },
     lhs = "<leader>h",
     rhs = hop.hint_char2,
     desc = "Hop to bigram (Hop)",
