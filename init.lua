@@ -334,12 +334,29 @@ require("nvim-treesitter.configs").setup({
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = "<cr>",
-      node_incremental = "<cr>",
-      node_decremental = "<s-cr>",
+      init_selection = "<Plug>TreesitterSelectMore",
+      node_incremental = "<Plug>TreesitterSelectMore",
+      node_decremental = "<Plug>TreesitterSelectLess",
     },
   },
 })
+
+---@param s string
+---@param pattern string
+---@return boolean
+local function string_ends_with(s, pattern)
+  return pattern == "" or s:sub(-#pattern) == pattern
+end
+
+vim.keymap.set({ "n", "x" }, "<CR>", function()
+  local name = vim.api.nvim_buf_get_name(0)
+  if string_ends_with(name, "[Command Line]") then
+    return "<CR>"
+  else
+    return "<Plug>TreesitterSelectMore"
+  end
+end, { expr = true })
+vim.keymap.set("x", "<S-CR>", "<Plug>TreesitterSelectLess")
 
 vim.treesitter.language.register("bash", { "sh", "zsh" })
 vim.treesitter.language.register("jsonc", "json")
