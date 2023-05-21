@@ -400,7 +400,7 @@ require("hop").setup()
 
 require("nvim-surround").setup({})
 
-require("gitsigns").setup({})
+require("gitsigns").setup({ update_debounce = 1000 })
 
 require("lualine").setup({
   sections = {
