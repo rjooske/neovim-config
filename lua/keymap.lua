@@ -5,18 +5,6 @@ local hop = require("hop")
 local snippy_mapping = require("snippy.mapping")
 local telescope_builtin = require("telescope.builtin")
 
----@param win integer
----@param f fun(w: integer, h: integer): number, number
-local function resize_window(win, f)
-  local w = vim.api.nvim_win_get_width(win)
-  local h = vim.api.nvim_win_get_height(win)
-  w, h = f(w, h)
-  w = math.floor(w)
-  h = math.floor(h)
-  vim.api.nvim_win_set_width(win, w)
-  vim.api.nvim_win_set_height(win, h)
-end
-
 M.leader = " "
 
 ---@class Keymap
@@ -109,47 +97,6 @@ M.keymaps = {
       vim.fn.setreg("*", vim.fn.expand("%:p"), "c")
     end,
     desc = "Yank absolute path to current file into `*` register",
-  },
-
-  {
-    mode = "n",
-    lhs = "[ww",
-    rhs = function()
-      resize_window(0, function(w, h)
-        return w * 2 / 3, h
-      end)
-    end,
-    desc = "Less window width",
-  },
-  {
-    mode = "n",
-    lhs = "]ww",
-    rhs = function()
-      resize_window(0, function(w, h)
-        return w * 3 / 2, h
-      end)
-    end,
-    desc = "More window width",
-  },
-  {
-    mode = "n",
-    lhs = "[wh",
-    rhs = function()
-      resize_window(0, function(w, h)
-        return w, h * 2 / 3
-      end)
-    end,
-    desc = "Less window height",
-  },
-  {
-    mode = "n",
-    lhs = "]wh",
-    rhs = function()
-      resize_window(0, function(w, h)
-        return w, h * 3 / 2
-      end)
-    end,
-    desc = "More window height",
   },
 
   {
