@@ -366,10 +366,9 @@ telescope.setup({
     file_ignore_patterns = { "^.git/" },
     mappings = {
       i = {
-        ["<esc>"] = actions.close,
-        ["<c-q>"] = actions.send_to_qflist,
-        ["<m-q>"] = actions.send_selected_to_qflist,
-        -- ["<cr>"] = actions.select_default + actions.center,
+        ["<Esc>"] = actions.close,
+        ["<C-q>"] = actions.send_to_qflist,
+        ["<M-q>"] = actions.send_selected_to_qflist,
       },
     },
     path_display = { "truncate" },
