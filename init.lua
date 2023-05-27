@@ -11,7 +11,7 @@ require("paq")({
   "simrat39/rust-tools.nvim",
 
   -- Completion
-  { "hrsh7th/cmp-nvim-lsp", pin = true }, -- Last good commit: 524cc0ba6146efd938b0e76fe23e7fee6134edef
+  "hrsh7th/cmp-nvim-lsp",
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-path",
   "hrsh7th/cmp-cmdline",
