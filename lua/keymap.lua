@@ -180,19 +180,6 @@ M.keymaps = {
   },
 
   {
-    mode = { "n", "x", "o", "t" },
-    lhs = "H",
-    rhs = "^",
-    desc = "First non-blank character in current line",
-  },
-  {
-    mode = { "n", "x", "o", "t" },
-    lhs = "L",
-    rhs = "g_",
-    desc = "Last non-blank character in current line",
-  },
-
-  {
     mode = "n",
     lhs = "[q",
     rhs = "<cmd>cprevious<cr>zz",
