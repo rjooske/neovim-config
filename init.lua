@@ -202,6 +202,7 @@ lspconfig.arduino_language_server.setup({
 })
 lspconfig.jsonls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.marksman.setup({ on_attach = on_attach, capabilities = capabilities })
+lspconfig.svelte.setup({ on_attach = on_attach, capabilities = capabilities })
 
 local rust_tools = require("rust-tools")
 rust_tools.setup({
@@ -254,12 +255,18 @@ null_ls.setup({
       extra_filetypes = { "arduino" },
     }),
 
-    null_ls.builtins.diagnostics.eslint_d.with({ condition = eslint_condition }),
+    null_ls.builtins.diagnostics.eslint_d.with({
+      extra_filetypes = { "svelte" },
+      condition = eslint_condition,
+    }),
     null_ls.builtins.code_actions.eslint_d.with({
+      extra_filetypes = { "svelte" },
       condition = eslint_condition,
     }),
 
-    null_ls.builtins.formatting.prettierd,
+    null_ls.builtins.formatting.prettierd.with({
+      extra_filetypes = { "svelte" },
+    }),
 
     null_ls.builtins.diagnostics.flake8.with({
       extra_args = { "--extend-ignore", "E203,E741" },
@@ -311,6 +318,7 @@ require("nvim-treesitter.configs").setup({
     "regex",
     "rust",
     "scss",
+    "svelte",
     "toml",
     "tsx",
     "typescript",
