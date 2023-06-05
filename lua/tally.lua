@@ -115,8 +115,9 @@ local function update(bufnr)
 end
 
 M.setup = function()
-  vim.api.nvim_create_autocmd("CursorMoved", {
+  vim.api.nvim_create_autocmd("ModeChanged", {
     group = vim.api.nvim_create_augroup("TallyUpdate", {}),
+    pattern = "*:*",
     callback = function(args)
       update(args.buf)
     end,
