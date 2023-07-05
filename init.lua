@@ -406,6 +406,7 @@ telescope.setup({
         i = { ["<c-space>"] = actions.to_fuzzy_refine },
       },
     },
+    buffers = { mappings = { i = { ["<C-r>"] = actions.delete_buffer } } },
   },
   extensions = {
     fzf = {
