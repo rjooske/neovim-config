@@ -24,6 +24,7 @@ require("paq")({
   "phaazon/hop.nvim",
   "numToStr/Comment.nvim",
   "kylechui/nvim-surround",
+  "Wansmer/treesj",
 
   -- Telescope
   "nvim-telescope/telescope.nvim",
@@ -442,3 +443,6 @@ require("completion").setup()
 vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 
 require("tally").setup()
+
+local treesj = require("treesj")
+treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })

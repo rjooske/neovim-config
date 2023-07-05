@@ -368,6 +368,25 @@ M.keymaps = {
     rhs = hop.hint_char2,
     desc = "Hop to bigram (Hop)",
   },
+
+  {
+    mode = "n",
+    lhs = "<Leader>xl",
+    rhs = ":TSJToggle<CR>",
+    desc = "Split or join nodes (Treesj)",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader>xk",
+    rhs = ":TSJSplit<CR>",
+    desc = "Split nodes (Treesj)",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader>xj",
+    rhs = ":TSJJoin<CR>",
+    desc = "Join nodes (Treesj)",
+  },
 }
 
 ---@type Keymap[]
