@@ -59,8 +59,8 @@ M.setup = function()
       ["<c-d>"] = { i = cmp.mapping.scroll_docs(4) },
     },
     sources = cmp.config.sources({
-      { name = "nvim_lsp" },
       { name = "snippy" },
+      { name = "nvim_lsp" },
     }, { source_all_buffers }),
     -- Select the first entry automatically
     completion = { completeopt = "menu,menuone,noinsert" },
