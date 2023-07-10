@@ -23,8 +23,23 @@ snippet forof
 	  ${0}
 	}
 
+snippet forin
+	for (const ${1:element} in ${2:list}) {
+	  ${0}
+	}
+
 snippet func
 	function ${1:name}(${2}): ${3} {
+	  ${0}
+	}
+
+snippet lam
+	(${1}) => {
+		${0}
+	}
+
+snippet constlam
+	const ${1:name} = (${2}): ${3} => {
 	  ${0}
 	}
 
