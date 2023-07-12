@@ -3,6 +3,26 @@ snippet fn
 	    ${0}
 	}
 
+snippet marm
+	${1} => ${0},
+
+snippet marmb
+	${1} => {
+	    ${0}
+	},
+
+snippet skt
+	#[derive(Debug, ${2})]
+	struct ${1:Name} {
+		${0}
+	}
+
+snippet enu
+	#[derive(Debug, ${2})]
+	enum ${1:Name} {
+		${0}
+	}
+
 snippet testmod
 	#[cfg(test)]
 	mod ${1:tests} {
