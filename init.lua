@@ -333,6 +333,7 @@ require("nvim-treesitter.configs").setup({
     "typescript",
     "vim",
     "vimdoc",
+    "yaml",
     -- "sql", -- a bit buggy
   },
   sync_install = false,
