@@ -481,6 +481,18 @@ M.lsp_keymaps = {
     rhs = vim.lsp.buf.code_action,
     desc = "Code action",
   },
+  {
+    mode = "n",
+    lhs = "<Leader>lw",
+    rhs = vim.lsp.buf.document_highlight,
+    desc = "Highlight word under cursor",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader>le",
+    rhs = vim.lsp.buf.clear_references,
+    desc = "Clear word highlights",
+  },
 }
 
 return M

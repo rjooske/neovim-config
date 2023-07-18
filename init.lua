@@ -53,6 +53,13 @@ require("paq")({
   "dstein64/vim-startuptime",
 })
 
+require("gruvbox").setup({
+  overrides = {
+    LspReferenceText = { standout = true },
+    LspReferenceRead = { standout = true },
+    LspReferenceWrite = { standout = true, underline = true },
+  },
+})
 vim.cmd.colorscheme("gruvbox")
 
 vim.go.backupcopy = "yes"
