@@ -2,6 +2,7 @@ local M = {}
 
 local gitsigns = require("gitsigns")
 local hop = require("hop")
+local smart_splits = require("smart-splits")
 local snippy_mapping = require("snippy.mapping")
 local telescope_builtin = require("telescope.builtin")
 
@@ -102,27 +103,76 @@ M.keymaps = {
   {
     mode = "n",
     lhs = "<c-h>",
-    rhs = "<cmd>wincmd h<cr>",
-    desc = "Window to the left",
+    rhs = smart_splits.move_cursor_left,
+    desc = "Window to the left (smart-splits)",
   },
   {
     mode = "n",
     lhs = "<c-j>",
-    rhs = "<cmd>wincmd j<cr>",
-    desc = "Window below",
+    rhs = smart_splits.move_cursor_down,
+    desc = "Window below (smart-splits)",
   },
   {
     mode = "n",
     lhs = "<c-k>",
-    rhs = "<cmd>wincmd k<cr>",
-    desc = "Window above",
+    rhs = smart_splits.move_cursor_up,
+    desc = "Window above (smart-splits)",
   },
   {
     mode = "n",
     lhs = "<c-l>",
-    rhs = "<cmd>wincmd l<cr>",
-    desc = "Window to the right",
+    rhs = smart_splits.move_cursor_right,
+    desc = "Window to the right (smart-splits)",
   },
+  {
+    mode = "n",
+    lhs = "<A-h>",
+    rhs = smart_splits.resize_left,
+    desc = "Resize window left (smart-splits)",
+  },
+  {
+    mode = "n",
+    lhs = "<A-j>",
+    rhs = smart_splits.resize_down,
+    desc = "Resize window down (smart-splits)",
+  },
+  {
+    mode = "n",
+    lhs = "<A-k>",
+    rhs = smart_splits.resize_up,
+    desc = "Resize window up (smart-splits)",
+  },
+  {
+    mode = "n",
+    lhs = "<A-l>",
+    rhs = smart_splits.resize_right,
+    desc = "Resize window right (smart-splits)",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader><Leader>h",
+    rhs = smart_splits.swap_buf_left,
+    desc = "Swap buffers left (smart-splits)",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader><Leader>j",
+    rhs = smart_splits.swap_buf_down,
+    desc = "Swap buffers down (smart-splits)",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader><Leader>k",
+    rhs = smart_splits.swap_buf_up,
+    desc = "Swap buffers up (smart-splits)",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader><Leader>l",
+    rhs = smart_splits.swap_buf_right,
+    desc = "Swap buffers right (smart-splits)",
+  },
+
   {
     mode = "t",
     lhs = "<esc>",

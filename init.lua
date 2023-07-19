@@ -51,6 +51,7 @@ require("paq")({
   -- Misc
   "famiu/bufdelete.nvim",
   "dstein64/vim-startuptime",
+  "mrjones2014/smart-splits.nvim",
 })
 
 require("gruvbox").setup({
@@ -457,3 +458,5 @@ require("tally").setup()
 
 local treesj = require("treesj")
 treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
+
+require("smart-splits").setup({ at_edge = "stop" })
