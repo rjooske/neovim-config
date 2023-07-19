@@ -229,6 +229,7 @@ rust_tools.setup({
 
 local eslint_condition = function(utils)
   return utils.root_has_file({
+    ".git",
     -- https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new
     "eslint.config.js",
     -- https://eslint.org/docs/user-guide/configuring/configuration-files#configuration-file-formats
