@@ -240,7 +240,7 @@ local eslint_condition = function(utils)
     ".eslintrc.yaml",
     ".eslintrc.yml",
     ".eslintrc.json",
-  })
+  }) and vim.fs.basename(vim.loop.cwd()) ~= "campusTAKESHI"
 end
 
 local null_ls = require("null-ls")
