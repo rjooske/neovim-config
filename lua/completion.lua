@@ -28,6 +28,16 @@ local function ellipsize(s, max_len)
 end
 
 M.setup = function()
+  local cmp_abort = cmp.mapping.abort()
+  local cmp_complete = cmp.mapping.complete()
+  local function cmp_toggle()
+    if cmp.visible() then
+      cmp_abort()
+    else
+      cmp_complete()
+    end
+  end
+
   cmp.setup({
     snippet = {
       expand = function(args)
@@ -48,13 +58,12 @@ M.setup = function()
       end,
     },
     mapping = {
-      ["<c-space>"] = { i = cmp.mapping.complete() },
+      ["<C-Space>"] = { i = cmp_toggle, c = cmp_toggle },
       ["<c-p>"] = { i = select_prev },
       ["<c-n>"] = { i = select_next },
       ["<up>"] = { i = select_prev },
       ["<down>"] = { i = select_next },
       ["<cr>"] = { i = cmp.mapping.confirm({ select = false }) },
-      ["<c-e>"] = { i = cmp.mapping.abort() },
       ["<c-u>"] = { i = cmp.mapping.scroll_docs(-4) },
       ["<c-d>"] = { i = cmp.mapping.scroll_docs(4) },
     },
