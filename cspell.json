@@ -41,6 +41,8 @@
     "gitsigns",
     "gitsigns",
     "goimports",
+    "golangci",
+    "gomod",
     "gopls",
     "gruvbox",
     "hrsh",

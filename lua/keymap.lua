@@ -439,6 +439,13 @@ M.keymaps = {
   },
 }
 
+local function as_jump(f)
+  return function()
+    vim.cmd("normal m'")
+    f()
+  end
+end
+
 ---@type Keymap[]
 M.lsp_keymaps = {
   {
@@ -498,25 +505,25 @@ M.lsp_keymaps = {
   {
     mode = "n",
     lhs = "gd",
-    rhs = telescope_builtin.lsp_definitions,
+    rhs = as_jump(telescope_builtin.lsp_definitions),
     desc = "Definitions (Telescope)",
   },
   {
     mode = "n",
     lhs = "gi",
-    rhs = telescope_builtin.lsp_implementations,
+    rhs = as_jump(telescope_builtin.lsp_implementations),
     desc = "Implementations (Telescope)",
   },
   {
     mode = "n",
     lhs = "gr",
-    rhs = telescope_builtin.lsp_references,
+    rhs = as_jump(telescope_builtin.lsp_references),
     desc = "References (Telescope)",
   },
   {
     mode = "n",
     lhs = "gy",
-    rhs = telescope_builtin.lsp_type_definitions,
+    rhs = as_jump(telescope_builtin.lsp_type_definitions),
     desc = "Type definitions (Telescope)",
   },
   {
