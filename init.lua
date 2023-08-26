@@ -231,6 +231,12 @@ rust_tools.setup({
         checkOnSave = { command = "clippy" },
         inlayHints = { locationLinks = false },
       },
+      -- https://users.rust-lang.org/t/how-to-disable-rust-analyzer-proc-macro-warnings-in-neovim/53150/5
+      diagnostics = {
+        enable = true,
+        disabled = { "unresolved-proc-macro" },
+        enableExperimental = true,
+      },
     },
     on_attach = on_attach,
     capabilities = capabilities,
