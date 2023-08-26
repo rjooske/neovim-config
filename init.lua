@@ -111,28 +111,43 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   end,
 })
 
+---@param filetype string
+---@return string
+local function filetype_to_formatter_name(filetype)
+  if filetype == "rust" then
+    return "rust_analyzer"
+  else
+    return "null-ls"
+  end
+end
+
 ---@param bufnr integer
----@param client_name string
-local function format_with(bufnr, client_name)
+local function format(bufnr)
+  if #vim.lsp.get_active_clients({ bufnr = bufnr }) == 0 then
+    return
+  end
+
+  local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+  local name = filetype_to_formatter_name(filetype)
   vim.lsp.buf.format({
     bufnr = bufnr,
     timeout_ms = 5000,
     filter = function(client)
-      return client.name == client_name
+      return client.name == name
     end,
   })
 end
 
--- Format on save if we have language servers attached to the buffer
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("FormatOnSave", {}),
-  callback = function(event)
-    if #vim.lsp.get_active_clients({ bufnr = event.buf }) == 0 then
-      return
-    end
-    format_with(event.buf, "null-ls")
+  callback = function(args)
+    format(args.buf)
   end,
 })
+
+vim.keymap.set("n", "<Leader>lf", function()
+  format(0)
+end, { desc = "Format" })
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("LspPreferences", {}),
@@ -151,12 +166,6 @@ local function on_attach(client, bufnr)
   local function map(mode, lhs, rhs, opts)
     opts.buffer = bufnr
     vim.keymap.set(mode, lhs, rhs, opts)
-  end
-
-  if client.name == "null-ls" then
-    map("n", "<leader>lf", function()
-      format_with(bufnr, "null-ls")
-    end, { desc = "Format" })
   end
 
   if client.server_capabilities.documentSymbolProvider then
@@ -286,8 +295,6 @@ null_ls.setup({
       extra_args = { "--line-length", "79" },
     }),
     null_ls.builtins.formatting.isort,
-
-    null_ls.builtins.formatting.rustfmt,
 
     null_ls.builtins.formatting.goimports,
 
