@@ -1,7 +1,5 @@
 local M = {}
 
-local colors = require("gruvbox.palette").colors
-
 M.opt = {
   background = "dark",
   colorcolumn = "80",
@@ -50,36 +48,38 @@ M.listchars = function(tab_size)
   }
 end
 
+local colors = require("gruvbox.palette").get_base_colors({}, nil, nil)
+
 M.lualine_theme = {
   normal = {
-    a = { bg = colors.light4, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
+    a = { bg = colors.fg4, fg = colors.bg0, gui = "bold" },
+    b = { bg = colors.bg2, fg = colors.fg1 },
+    c = { bg = colors.bg1, fg = colors.fg4 },
   },
   insert = {
-    a = { bg = colors.bright_blue, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
+    a = { bg = colors.blue, fg = colors.bg0, gui = "bold" },
+    b = { bg = colors.bg2, fg = colors.fg1 },
+    c = { bg = colors.bg1, fg = colors.fg4 },
   },
   visual = {
-    a = { bg = colors.bright_orange, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
+    a = { bg = colors.orange, fg = colors.bg0, gui = "bold" },
+    b = { bg = colors.bg2, fg = colors.fg1 },
+    c = { bg = colors.bg1, fg = colors.fg4 },
   },
   replace = {
-    a = { bg = colors.bright_red, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
+    a = { bg = colors.red, fg = colors.bg0, gui = "bold" },
+    b = { bg = colors.bg2, fg = colors.fg1 },
+    c = { bg = colors.bg1, fg = colors.fg4 },
   },
   command = {
-    a = { bg = colors.bright_purple, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
+    a = { bg = colors.purple, fg = colors.bg0, gui = "bold" },
+    b = { bg = colors.bg2, fg = colors.fg1 },
+    c = { bg = colors.bg1, fg = colors.fg4 },
   },
   terminal = {
-    a = { bg = colors.bright_green, fg = colors.dark0, gui = "bold" },
-    b = { bg = colors.dark2, fg = colors.light1 },
-    c = { bg = colors.dark1, fg = colors.light4 },
+    a = { bg = colors.green, fg = colors.bg0, gui = "bold" },
+    b = { bg = colors.bg2, fg = colors.fg1 },
+    c = { bg = colors.bg1, fg = colors.fg4 },
   },
 }
 
