@@ -1,6 +1,6 @@
 local M = {}
 
-local colors = require("gruvbox.palette").colors
+local colors = require("gruvbox").palette
 
 M.opt = {
   background = "dark",
