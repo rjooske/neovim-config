@@ -40,7 +40,7 @@ require("paq")({
   -- Bling
   {
     "nvim-treesitter/nvim-treesitter",
-    run = function()
+    build = function()
       vim.cmd("TSUpdate")
     end,
   },
