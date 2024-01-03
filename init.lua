@@ -52,6 +52,7 @@ require("paq")({
   "famiu/bufdelete.nvim",
   "dstein64/vim-startuptime",
   "mrjones2014/smart-splits.nvim",
+  "willothy/flatten.nvim",
 })
 
 require("gruvbox").setup({
@@ -480,3 +481,5 @@ local treesj = require("treesj")
 treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
 
 require("smart-splits").setup({ at_edge = "stop" })
+
+require("flatten").setup({})
