@@ -21,10 +21,10 @@ M.opt = {
 }
 
 M.signs = {
-  DiagnosticSignError = " ",
-  DiagnosticSignWarn = " ",
-  DiagnosticSignInfo = " ",
-  DiagnosticSignHint = " ",
+  DiagnosticSignError = "",
+  DiagnosticSignWarn = "",
+  DiagnosticSignInfo = "",
+  DiagnosticSignHint = "󰌶",
 }
 
 ---@param len integer
