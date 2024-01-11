@@ -31,6 +31,18 @@ snippet enu
 		${0}
 	}
 
+snippet pt
+	println!("{}", ${1});${0}
+
+snippet ptd
+	println!("{:?}", ${1});${0}
+
+snippet ept
+	eprintln!("{}", ${1});${0}
+
+snippet eptd
+	eprintln!("{:?}", ${1});${0}
+
 snippet testmod
 	#[cfg(test)]
 	mod ${1:tests} {
