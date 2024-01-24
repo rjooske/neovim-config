@@ -227,6 +227,7 @@ lspconfig.emmet_language_server.setup({
 lspconfig.cssls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.jsonls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.svelte.setup({ on_attach = on_attach, capabilities = capabilities })
+lspconfig.ocamllsp.setup({ on_attach = on_attach, capabilities = capabilities })
 
 local rust_tools = require("rust-tools")
 rust_tools.setup({
@@ -316,6 +317,8 @@ null_ls.setup({
     null_ls.builtins.formatting.cabal_fmt,
 
     null_ls.builtins.formatting.taplo,
+
+    null_ls.builtins.formatting.ocamlformat,
   },
 })
 
@@ -347,6 +350,9 @@ require("nvim-treesitter.configs").setup({
     "make",
     "markdown",
     "markdown_inline",
+    "ocaml",
+    "ocaml_interface",
+    "ocamllex",
     "proto",
     "python",
     "regex",
