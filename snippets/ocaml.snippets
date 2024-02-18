@@ -9,5 +9,12 @@ snippet if
 	then ${2:()}
 	else ${3:()}
 
+snippet match
+	match ${1} with
+	| ${2} -> ${0}
+
+snippet marm
+	| ${1} -> ${0}
+
 snippet lam
 	(fun ${1} -> ${0})
