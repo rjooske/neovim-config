@@ -55,6 +55,8 @@ require("paq")({
   "willothy/flatten.nvim",
 })
 
+local my_augroup = vim.api.nvim_create_augroup("MyAugroup", {})
+
 require("gruvbox").setup({
   overrides = {
     LspReferenceText = { standout = true },
@@ -92,7 +94,7 @@ for name, text in pairs(require("style").signs) do
 end
 
 vim.api.nvim_create_autocmd("BufWinEnter", {
-  group = vim.api.nvim_create_augroup("DetectIndent", {}),
+  group = my_augroup,
   callback = function(event)
     local buftype = vim.api.nvim_buf_get_option(event.buf, "buftype")
     if buftype ~= "" then
@@ -140,7 +142,7 @@ local function format(bufnr)
 end
 
 vim.api.nvim_create_autocmd("BufWritePre", {
-  group = vim.api.nvim_create_augroup("FormatOnSave", {}),
+  group = my_augroup,
   callback = function(args)
     format(args.buf)
   end,
@@ -151,7 +153,7 @@ vim.keymap.set("n", "<Leader>lf", function()
 end, { desc = "Format" })
 
 vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("LspPreferences", {}),
+  group = my_augroup,
   callback = function(args)
     -- Make `gq` work by removing `formatexpr` that gets added automatically
     vim.bo[args.buf].formatexpr = nil
@@ -159,6 +161,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
     -- Disable semantic tokens
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     client.server_capabilities.semanticTokensProvider = nil
+  end,
+})
+vim.api.nvim_create_autocmd("LspDetach", {
+  group = my_augroup,
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client.name == "arduino_language_server" then
+      vim.api.nvim_buf_call(args.buf, function()
+        vim.api.nvim_command("LspStart arduino_language_server")
+      end)
+    end
   end,
 })
 
@@ -211,12 +224,6 @@ lspconfig.arduino_language_server.setup({
     "arduino-language-server",
     "-cli-config",
     "/Users/rjooske/Library/Arduino15/arduino-cli.yaml",
-    "-fqbn",
-    "arduino:avr:nano:cpu=atmega328old",
-    "-cli",
-    "arduino-cli",
-    "-clangd",
-    "clangd",
   },
 })
 lspconfig.html.setup({ on_attach = on_attach, capabilities = capabilities })
@@ -409,6 +416,7 @@ vim.keymap.set("x", "<S-CR>", "<Plug>TreesitterSelectLess")
 
 vim.treesitter.language.register("bash", { "sh", "zsh" })
 vim.treesitter.language.register("jsonc", "json")
+vim.treesitter.language.register("cpp", "arduino")
 
 require("dressing").setup({
   input = { insert_only = false, win_options = { winblend = 0 } },
