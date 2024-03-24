@@ -159,17 +159,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     client.server_capabilities.semanticTokensProvider = nil
   end,
 })
-vim.api.nvim_create_autocmd("LspDetach", {
-  group = my_augroup,
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.name == "arduino_language_server" then
-      vim.api.nvim_buf_call(args.buf, function()
-        vim.api.nvim_command("LspStart arduino_language_server")
-      end)
-    end
-  end,
-})
 
 local function on_attach(client, bufnr)
   -- Create a mapping local to this buffer
@@ -328,6 +317,7 @@ null_ls.setup({
 
 require("nvim-treesitter.configs").setup({
   ensure_installed = {
+    "arduino",
     "bash",
     "c",
     "cmake",
@@ -413,7 +403,6 @@ vim.keymap.set("x", "<S-CR>", "<Plug>TreesitterSelectLess")
 
 vim.treesitter.language.register("bash", { "sh", "zsh" })
 vim.treesitter.language.register("jsonc", "json")
-vim.treesitter.language.register("cpp", "arduino")
 
 require("dressing").setup({
   input = { insert_only = false, win_options = { winblend = 0 } },
