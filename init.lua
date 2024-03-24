@@ -89,10 +89,6 @@ for k, v in pairs(require("style").opt) do
   vim.opt[k] = v
 end
 
-for name, text in pairs(require("style").signs) do
-  vim.fn.sign_define(name, { text = text, texthl = name })
-end
-
 vim.api.nvim_create_autocmd("BufWinEnter", {
   group = my_augroup,
   callback = function(event)
@@ -193,6 +189,7 @@ local function on_attach(client, bufnr)
 end
 
 vim.diagnostic.config({
+  signs = false,
   severity_sort = true,
   float = {
     source = "always",
