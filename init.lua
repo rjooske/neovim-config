@@ -336,6 +336,7 @@ require("nvim-treesitter.configs").setup({
     "gomod",
     "haskell",
     "html",
+    "ini",
     "java",
     "javascript",
     "jsdoc",
