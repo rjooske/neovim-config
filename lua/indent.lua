@@ -3,28 +3,16 @@ local M = {}
 ---@class VimIndentOptions
 ---@field expandtab boolean
 ---@field shiftwidth integer
+---@field softtabstop integer
 ---@field tabstop integer
 
 ---@class OkIndentConfig
 ---@field tab_width integer
 ---@field space_widths integer[]
 
----@param arr integer[]
----@return integer[]
-local function sorted_descending(arr)
-  local res = {}
-  for _, v in ipairs(arr) do
-    table.insert(res, v)
-  end
-  table.sort(res, function(a, b)
-    return a > b
-  end)
-  return res
-end
-
 ---@param line string
 ---@return boolean
-local function detect_tab(line)
+local function tab_indented(line)
   if #line < 2 then
     return false
   end
@@ -32,100 +20,86 @@ local function detect_tab(line)
 end
 
 ---@param line string
----@param width integer
----@return boolean
-local function detect_space(line, width)
-  if #line < width + 1 then
-    return false
-  end
-  return string.sub(line, 1, width) == string.rep(" ", width)
-    and string.sub(line, width + 1, width + 1) ~= " "
+---@return integer
+local function space_indent_size(line)
+  local _, last = line:find("^ *")
+  return last or 0
 end
 
----@param line string
----@param widths integer[] Must be sorted in descending order.
----@return integer?
-local function detect_spaces(line, widths)
-  for _, w in ipairs(widths) do
-    if detect_space(line, w) then
-      return w
+---@param config OkIndentConfig
+---@param lines fun(): string?
+---@return VimIndentOptions?
+local function detect(config, lines)
+  ---@type table<integer, boolean>
+  local step_size_to_expected = {}
+  for _, n in ipairs(config.space_widths) do
+    step_size_to_expected[n] = true
+  end
+
+  ---@type table<integer, integer>
+  local step_size_to_count = {}
+  local last_space_indent_size = 0
+  for line in lines do
+    if line ~= "" then
+      if tab_indented(line) then
+        return {
+          expandtab = false,
+          shiftwidth = config.tab_width,
+          softtabstop = config.tab_width,
+          tabstop = config.tab_width,
+        }
+      end
+      local n = space_indent_size(line)
+      local step_size = math.abs(n - last_space_indent_size)
+      if step_size ~= 0 then
+        step_size_to_count[step_size] = (step_size_to_count[step_size] or 0) + 1
+      end
+      last_space_indent_size = n
     end
   end
-end
 
----@param line string
----@param cfg OkIndentConfig
----@return VimIndentOptions?
-local function detect_tab_or_spaces(line, cfg)
-  if detect_tab(line) then
+  local best_step_size = nil
+  local best_count = 0
+  for step_size, count in pairs(step_size_to_count) do
+    if count > best_count and step_size_to_expected[step_size] then
+      best_step_size = step_size
+      best_count = count
+    end
+  end
+
+  if best_step_size == nil then
+    return nil
+  else
     return {
-      expandtab = false,
-      shiftwidth = cfg.tab_width,
-      tabstop = cfg.tab_width,
+      expandtab = true,
+      shiftwidth = best_step_size,
+      softtabstop = best_step_size,
+      tabstop = best_step_size,
     }
   end
-  local w = detect_spaces(line, cfg.space_widths)
-  if w ~= nil then
-    return { expandtab = true, shiftwidth = w, tabstop = w }
-  end
 end
 
----@param line_count integer
----@param get_line fun(n: integer): string Returns the nth line (0-indexed)
+---@param bufnr integer
 ---@return fun(): string?
-local function iterate_over_lines(line_count, get_line)
+local function buffer_lines(bufnr)
+  ---@type integer
+  local line_count = vim.api.nvim_buf_line_count(bufnr)
   local i = 0
   return function()
     if i == line_count then
       return
     end
-    local line = get_line(i)
+    local line = vim.api.nvim_buf_get_lines(bufnr, i, i + 1, true)[1]
     i = i + 1
     return line
   end
 end
 
----@param line_iterator fun(): string?
----@param cfg OkIndentConfig
----@return VimIndentOptions?
-local function find_first_indent(line_iterator, cfg)
-  for line in line_iterator do
-    local opts = detect_tab_or_spaces(line, cfg)
-    if opts ~= nil then
-      return opts
-    end
-  end
-end
-
 ---@param bufnr integer
----@param max_line_len integer
----@return fun(): string?
-local function iterate_over_buffer_lines(bufnr, max_line_len)
-  return iterate_over_lines(vim.api.nvim_buf_line_count(bufnr), function(n)
-    return vim.api.nvim_buf_get_text(bufnr, n, 0, n, max_line_len, {})[1]
-  end)
-end
-
----@param bufnr integer
----@param cfg OkIndentConfig
+---@param config OkIndentConfig
 ---@return VimIndentOptions?
-M.detect = function(bufnr, cfg)
-  cfg = {
-    tab_width = cfg.tab_width,
-    space_widths = sorted_descending(cfg.space_widths),
-  }
-  local max_space_width = cfg.space_widths[1]
-  return find_first_indent(
-    iterate_over_buffer_lines(bufnr, max_space_width + 1),
-    cfg
-  )
+M.detect = function(bufnr, config)
+  return detect(config, buffer_lines(bufnr))
 end
-
-M.exported_for_testing = {
-  detect_tab = detect_tab,
-  detect_spaces = detect_spaces,
-  detect_tab_or_spaces = detect_tab_or_spaces,
-  find_first_indent = find_first_indent,
-}
 
 return M
