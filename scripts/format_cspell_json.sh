@@ -1,3 +1,3 @@
-TMP=$(mktemp)
-jq -S '.words |= (map(ascii_downcase) | sort)' < cspell.json 1> $TMP || exit 1
-cp $TMP cspell.json
+tmp=$(mktemp)
+jq -S '.words |= (map(ascii_downcase) | unique)' < cspell.json 1> $tmp || exit 1
+cp $tmp cspell.json
