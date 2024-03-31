@@ -439,7 +439,7 @@ telescope.setup({
     preview = { filesize_limit = 1 }, -- 1 MB
   },
   pickers = {
-    find_files = { hidden = true },
+    find_files = { follow = true, hidden = true },
     live_grep = {
       mappings = {
         i = { ["<c-space>"] = actions.to_fuzzy_refine },
