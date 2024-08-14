@@ -174,6 +174,18 @@ M.keymaps = {
   },
 
   {
+    mode = "n",
+    lhs = "<Leader>t",
+    rhs = "<Cmd>vsplit | terminal<CR>",
+    desc = "Open terminal in a vertical split",
+  },
+  {
+    mode = "n",
+    lhs = "<Leader>T",
+    rhs = "<Cmd>split | terminal<CR>",
+    desc = "Open terminal in a horizontal split",
+  },
+  {
     mode = "t",
     lhs = "<esc>",
     rhs = [[<c-\><c-n>]],
