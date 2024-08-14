@@ -1,6 +1,7 @@
 local M = {}
 
 local cmp = require("cmp")
+local cmp_compare = require("cmp.config.compare")
 local lspkind = require("lspkind")
 local snippy = require("snippy")
 
@@ -25,6 +26,24 @@ local function ellipsize(s, max_len)
   else
     return s
   end
+end
+
+---@return boolean
+local function cmp_entry_has_imports(entry)
+  local i = entry:get_completion_item()
+  return i.data ~= nil and i.data.imports ~= nil
+end
+
+---@return boolean?
+local function non_importing_entries_come_earlier(entry_a, entry_b)
+  local a_has_imports = cmp_entry_has_imports(entry_a)
+  local b_has_imports = cmp_entry_has_imports(entry_b)
+  if a_has_imports and not b_has_imports then
+    return false
+  elseif not a_has_imports and b_has_imports then
+    return true
+  end
+  return nil
 end
 
 M.setup = function()
@@ -75,6 +94,26 @@ M.setup = function()
     completion = { completeopt = "menu,menuone,noinsert" },
     -- Ignore preselect requests from language servers
     preselect = cmp.PreselectMode.None,
+  })
+
+  cmp.setup.filetype("rust", {
+    -- Default sorting from nvim-cmp/lua/cmp/config/default.lua
+    sorting = {
+      priority_weight = 2,
+      comparators = {
+        cmp_compare.offset,
+        cmp_compare.exact,
+        non_importing_entries_come_earlier,
+        -- cmp_compare.scopes,
+        cmp_compare.score,
+        cmp_compare.recently_used,
+        cmp_compare.locality,
+        cmp_compare.kind,
+        -- cmp_compare.sort_text,
+        cmp_compare.length,
+        cmp_compare.order,
+      },
+    },
   })
 
   cmp.setup.cmdline({ "/", "?" }, {
