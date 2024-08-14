@@ -96,6 +96,7 @@
     "rustfmt",
     "savq",
     "setreg",
+    "shellcheck",
     "shellescape",
     "shiftwidth",
     "showmode",

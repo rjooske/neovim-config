@@ -290,6 +290,9 @@ null_ls.setup({
       end,
     }),
 
+    null_ls.builtins.diagnostics.shellcheck,
+    null_ls.builtins.code_actions.shellcheck,
+
     null_ls.builtins.formatting.clang_format.with({
       extra_filetypes = { "arduino" },
     }),
