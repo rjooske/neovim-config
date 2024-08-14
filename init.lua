@@ -9,6 +9,7 @@ require("paq")({
   "neovim/nvim-lspconfig",
   "jose-elias-alvarez/null-ls.nvim",
   "simrat39/rust-tools.nvim",
+  "marilari88/twoslash-queries.nvim",
 
   -- Completion
   "hrsh7th/cmp-nvim-lsp",
@@ -201,7 +202,19 @@ lspconfig.clangd.setup({
   ),
 })
 lspconfig.pyright.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.tsserver.setup({ on_attach = on_attach, capabilities = capabilities })
+lspconfig.tsserver.setup({
+  on_attach = function(client, bufnr)
+    local twoslash_queries = require("twoslash-queries")
+    twoslash_queries.setup({ multi_line = true, is_enabled = true })
+    twoslash_queries.attach(client, bufnr)
+    on_attach(client, bufnr)
+  end,
+  capabilities = capabilities,
+  settings = {
+    -- https://github.com/typescript-language-server/typescript-language-server/blob/b224b878652438bcdd639137a6b1d1a6630129e4/docs/configuration.md?plain=1#L187
+    completions = { completeFunctionCalls = true },
+  },
+})
 lspconfig.hls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.gopls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.jdtls.setup({ on_attach = on_attach, capabilities = capabilities })
