@@ -40,22 +40,20 @@ local function detect(config, lines)
   local step_size_to_count = {}
   local last_space_indent_size = 0
   for line in lines do
-    if line ~= "" then
-      if tab_indented(line) then
-        return {
-          expandtab = false,
-          shiftwidth = config.tab_width,
-          softtabstop = config.tab_width,
-          tabstop = config.tab_width,
-        }
-      end
-      local n = space_indent_size(line)
-      local step_size = math.abs(n - last_space_indent_size)
-      if step_size ~= 0 then
-        step_size_to_count[step_size] = (step_size_to_count[step_size] or 0) + 1
-      end
-      last_space_indent_size = n
+    if tab_indented(line) then
+      return {
+        expandtab = false,
+        shiftwidth = config.tab_width,
+        softtabstop = config.tab_width,
+        tabstop = config.tab_width,
+      }
     end
+    local n = space_indent_size(line)
+    local step_size = math.abs(n - last_space_indent_size)
+    if step_size ~= 0 then
+      step_size_to_count[step_size] = (step_size_to_count[step_size] or 0) + 1
+    end
+    last_space_indent_size = n
   end
 
   local best_step_size = nil
@@ -81,16 +79,19 @@ end
 
 ---@param bufnr integer
 ---@return fun(): string?
-local function buffer_lines(bufnr)
+local function buffer_non_empty_lines(bufnr)
   ---@type integer
   local line_count = vim.api.nvim_buf_line_count(bufnr)
   local i = 0
   return function()
-    if i == line_count then
-      return
+    local line = ""
+    while line == "" do
+      if i == line_count then
+        return
+      end
+      line = vim.api.nvim_buf_get_lines(bufnr, i, i + 1, true)[1]
+      i = i + 1
     end
-    local line = vim.api.nvim_buf_get_lines(bufnr, i, i + 1, true)[1]
-    i = i + 1
     return line
   end
 end
@@ -99,7 +100,7 @@ end
 ---@param config OkIndentConfig
 ---@return VimIndentOptions?
 M.detect = function(bufnr, config)
-  return detect(config, buffer_lines(bufnr))
+  return detect(config, buffer_non_empty_lines(bufnr))
 end
 
 return M
