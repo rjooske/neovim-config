@@ -259,10 +259,14 @@ rust_tools.setup({
 
 local eslint_condition = function(utils)
   return utils.root_has_file({
-    -- https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new
+    -- https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file
     "eslint.config.js",
-    -- https://eslint.org/docs/user-guide/configuring/configuration-files#configuration-file-formats
-    ".eslintrc",
+    "eslint.config.mjs",
+    "eslint.config.cjs",
+    "eslint.config.ts",
+    "eslint.config.mts",
+    "eslint.config.cts",
+    -- https://eslint.org/docs/latest/use/configure/configuration-files-deprecated
     ".eslintrc.js",
     ".eslintrc.cjs",
     ".eslintrc.yaml",
