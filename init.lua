@@ -202,7 +202,7 @@ lspconfig.clangd.setup({
   ),
 })
 lspconfig.pyright.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.tsserver.setup({
+lspconfig.ts_ls.setup({
   on_attach = function(client, bufnr)
     local twoslash_queries = require("twoslash-queries")
     twoslash_queries.setup({ multi_line = true, is_enabled = true })
