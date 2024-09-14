@@ -111,45 +111,12 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   end,
 })
 
----@param filetype string
----@return string
-local function filetype_to_formatter_name(filetype)
-  if filetype == "rust" then
-    return "rust_analyzer"
-  elseif filetype == "svelte" then
-    return "svelte"
-  else
-    return "null-ls"
-  end
-end
-
----@param bufnr integer
-local function format(bufnr)
-  if #vim.lsp.get_active_clients({ bufnr = bufnr }) == 0 then
-    return
-  end
-
-  local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
-  local name = filetype_to_formatter_name(filetype)
-  vim.lsp.buf.format({
-    bufnr = bufnr,
-    timeout_ms = 5000,
-    filter = function(client)
-      return client.name == name
-    end,
-  })
-end
-
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = my_augroup,
   callback = function(args)
-    format(args.buf)
+    require("format").format(args.buf)
   end,
 })
-
-vim.keymap.set("n", "<Leader>lf", function()
-  format(0)
-end, { desc = "Format" })
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = my_augroup,

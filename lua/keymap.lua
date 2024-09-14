@@ -1,5 +1,6 @@
 local M = {}
 
+local format = require("format")
 local gitsigns = require("gitsigns")
 local hop = require("hop")
 local smart_splits = require("smart-splits")
@@ -543,6 +544,14 @@ M.lsp_keymaps = {
     lhs = "<space>lr",
     rhs = vim.lsp.buf.rename,
     desc = "Rename",
+  },
+  {
+    mode = "n",
+    lhs = "<space>lf",
+    rhs = function()
+      format.format(vim.api.nvim_get_current_buf())
+    end,
+    desc = "Format",
   },
   {
     mode = "n",
