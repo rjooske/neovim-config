@@ -8,7 +8,8 @@ require("paq")({
   -- Language servers
   "neovim/nvim-lspconfig",
   "jose-elias-alvarez/null-ls.nvim",
-  "simrat39/rust-tools.nvim",
+
+  -- TypeScript
   "marilari88/twoslash-queries.nvim",
 
   -- Completion
@@ -203,25 +204,10 @@ lspconfig.cssls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.jsonls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.svelte.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.ocamllsp.setup({ on_attach = on_attach, capabilities = capabilities })
-
-local rust_tools = require("rust-tools")
-rust_tools.setup({
-  server = {
-    settings = {
-      ["rust-analyzer"] = {
-        checkOnSave = { command = "clippy" },
-        inlayHints = { locationLinks = false },
-      },
-      -- https://users.rust-lang.org/t/how-to-disable-rust-analyzer-proc-macro-warnings-in-neovim/53150/5
-      diagnostics = {
-        enable = true,
-        disabled = { "unresolved-proc-macro" },
-        enableExperimental = true,
-      },
-    },
-    on_attach = on_attach,
-    capabilities = capabilities,
-  },
+lspconfig.rust_analyzer.setup({
+  settings = { ["rust-analyzer"] = { checkOnSave = { command = "clippy" } } },
+  on_attach = on_attach,
+  capabilities = capabilities,
 })
 
 local eslint_condition = function(utils)
