@@ -358,19 +358,11 @@ require("nvim-treesitter.configs").setup({
   },
 })
 
----@param s string
----@param pattern string
----@return boolean
-local function string_ends_with(s, pattern)
-  return pattern == "" or s:sub(-#pattern) == pattern
-end
-
 vim.keymap.set({ "n", "x" }, "<CR>", function()
-  local name = vim.api.nvim_buf_get_name(0)
-  if string_ends_with(name, "[Command Line]") then
-    return "<CR>"
-  else
+  if vim.api.nvim_buf_get_option(0, "buftype") == "" then
     return "<Plug>TreesitterSelectMore"
+  else
+    return "<CR>"
   end
 end, { expr = true })
 vim.keymap.set("x", "<S-CR>", "<Plug>TreesitterSelectLess")
