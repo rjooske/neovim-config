@@ -14,11 +14,11 @@ end
 
 ---@param bufnr integer Must be an explicit number and not 0.
 M.format = function(bufnr)
-  if #vim.lsp.get_active_clients({ bufnr = bufnr }) == 0 then
+  if #vim.lsp.get_clients({ bufnr = bufnr }) == 0 then
     return
   end
 
-  local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
   local name = filetype_to_formatter_name(filetype)
   vim.lsp.buf.format({
     bufnr = bufnr,

@@ -80,8 +80,8 @@ for _, v in ipairs(require("keymap").keymaps) do
 end
 
 vim.keymap.set("n", "<leader>d", function()
-  local buftype = vim.api.nvim_buf_get_option(0, "buftype")
-  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+  local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = 0 })
   local force = buftype == "terminal" or filetype == "netrw"
   require("bufdelete").bufdelete(0, force)
 end)
@@ -93,7 +93,8 @@ end
 vim.api.nvim_create_autocmd("BufWinEnter", {
   group = my_augroup,
   callback = function(event)
-    local buftype = vim.api.nvim_buf_get_option(event.buf, "buftype")
+    local buftype =
+      vim.api.nvim_get_option_value("buftype", { buf = event.buf })
     if buftype ~= "" then
       return
     end
@@ -145,7 +146,7 @@ vim.diagnostic.config({
   signs = false,
   severity_sort = true,
   float = {
-    source = "always",
+    source = true,
     scope = "line",
   },
 })
@@ -218,7 +219,7 @@ local eslint_condition = function(utils)
     ".eslintrc.yaml",
     ".eslintrc.yml",
     ".eslintrc.json",
-  }) and vim.fs.basename(vim.loop.cwd())
+  }) and vim.fs.basename(vim.uv.cwd())
 end
 
 local null_ls = require("null-ls")
@@ -334,7 +335,7 @@ require("nvim-treesitter.configs").setup({
     enable = true,
     disable = function(_, buf)
       local max_filesize = 1 * 1024 * 1024 -- 1MB
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then
         return true
       end
@@ -353,7 +354,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 vim.keymap.set({ "n", "x" }, "<CR>", function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "" then
+  if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "" then
     return "<Plug>TreesitterSelectMore"
   else
     return "<CR>"
