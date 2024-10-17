@@ -118,18 +118,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = my_augroup,
-  callback = function(args)
-    -- Make `gq` work by removing `formatexpr` that gets added automatically
-    vim.bo[args.buf].formatexpr = nil
-
-    -- Disable semantic tokens
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    client.server_capabilities.semanticTokensProvider = nil
-  end,
-})
-
 local function on_attach(client, bufnr)
   -- Create a mapping local to this buffer
   local function map(mode, lhs, rhs, opts)
@@ -140,6 +128,12 @@ local function on_attach(client, bufnr)
   if client.server_capabilities.documentSymbolProvider then
     require("nvim-navic").attach(client, bufnr)
   end
+
+  -- Make `gq` work by removing `formatexpr` that gets added automatically
+  vim.bo[bufnr].formatexpr = nil
+
+  -- Disable semantic tokens
+  client.server_capabilities.semanticTokensProvider = nil
 
   for _, v in ipairs(require("keymap").lsp_keymaps) do
     local opts = { silent = true, desc = v.desc }
