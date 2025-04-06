@@ -5,7 +5,17 @@ snippet if
 
 snippet iferr
 	if err != nil {
-		return ${0}
+		return fmt.Errorf("${1}: %w", err)
+	}
+
+snippet for
+	for ${1} {
+		${0}
+	}
+
+snippet fori
+	for ${1:i} := 0; ${1} < ${2:n}; ${1}++ {
+		${0}
 	}
 
 snippet fn
@@ -14,6 +24,11 @@ snippet fn
 	}
 
 snippet meth
-	func (${1:}) ${2:name}(${3}) ${4} {
+	func (${1}) ${2:name}(${3}) ${4} {
+		${0}
+	}
+
+snippet skt
+	type ${1} struct {
 		${0}
 	}
