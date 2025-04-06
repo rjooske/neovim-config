@@ -2,7 +2,6 @@ local M = {}
 
 local format = require("format")
 local gitsigns = require("gitsigns")
-local hop = require("hop")
 local snippy_mapping = require("snippy.mapping")
 local telescope_builtin = require("telescope.builtin")
 
@@ -356,13 +355,6 @@ M.keymaps = {
     lhs = "]h",
     rhs = gitsigns.next_hunk,
     desc = "Next hunk (Gitsigns)",
-  },
-
-  {
-    mode = { "n", "x" },
-    lhs = "<leader>h",
-    rhs = hop.hint_char2,
-    desc = "Hop to bigram (Hop)",
   },
 
   {

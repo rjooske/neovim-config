@@ -23,7 +23,6 @@ require("paq")({
   "onsails/lspkind.nvim",
 
   -- Editing
-  "phaazon/hop.nvim",
   "numToStr/Comment.nvim",
   "kylechui/nvim-surround",
   "Wansmer/treesj",
@@ -416,8 +415,6 @@ telescope.setup({
   },
 })
 telescope.load_extension("fzf")
-
-require("hop").setup()
 
 require("nvim-surround").setup({})
 
