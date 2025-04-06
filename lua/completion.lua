@@ -47,6 +47,15 @@ local function non_importing_entries_come_earlier(entry_a, entry_b)
 end
 
 M.setup = function()
+  snippy.setup({
+    virtual_markers = {
+      enabled = true,
+      default = "!",
+      empty = "?",
+      hl_group = "Error",
+    },
+  })
+
   local cmp_abort = cmp.mapping.abort()
   local cmp_complete = cmp.mapping.complete()
   local function cmp_toggle()
