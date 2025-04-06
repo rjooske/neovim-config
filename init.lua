@@ -7,7 +7,8 @@ require("paq")({
 
   -- Language servers
   "neovim/nvim-lspconfig",
-  "jose-elias-alvarez/null-ls.nvim",
+  "nvimtools/none-ls.nvim",
+  "nvimtools/none-ls-extras.nvim",
 
   -- TypeScript
   "marilari88/twoslash-queries.nvim",
@@ -148,6 +149,7 @@ vim.diagnostic.config({
     source = true,
     scope = "line",
   },
+  virtual_text = true,
 })
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -202,6 +204,8 @@ lspconfig.rust_analyzer.setup({
   on_attach = on_attach,
   capabilities = capabilities,
 })
+lspconfig.texlab.setup({ on_attach = on_attach, capabilities = capabilities })
+lspconfig.taplo.setup({ on_attach = on_attach, capabilities = capabilities })
 
 local eslint_condition = function(utils)
   return utils.root_has_file({
@@ -225,14 +229,6 @@ local null_ls = require("null-ls")
 null_ls.setup({
   on_attach = on_attach,
   sources = {
-    null_ls.builtins.diagnostics.cspell.with({
-      -- Force the severity to be HINT
-      diagnostics_postprocess = function(diagnostic)
-        diagnostic.severity = vim.diagnostic.severity.HINT
-      end,
-    }),
-    null_ls.builtins.code_actions.cspell,
-
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.diagnostics.selene.with({
       condition = function(utils)
@@ -240,18 +236,15 @@ null_ls.setup({
       end,
     }),
 
-    null_ls.builtins.diagnostics.shellcheck,
-    null_ls.builtins.code_actions.shellcheck,
-
     null_ls.builtins.formatting.clang_format.with({
-      extra_filetypes = { "arduino" },
+      extra_filetypes = { "arduino", "glsl" },
     }),
 
-    null_ls.builtins.diagnostics.eslint_d.with({
+    require("none-ls.diagnostics.eslint_d").with({
       extra_filetypes = { "svelte" },
       condition = eslint_condition,
     }),
-    null_ls.builtins.code_actions.eslint_d.with({
+    require("none-ls.code_actions.eslint_d").with({
       extra_filetypes = { "svelte" },
       condition = eslint_condition,
     }),
@@ -260,7 +253,7 @@ null_ls.setup({
       extra_filetypes = { "svelte" },
     }),
 
-    null_ls.builtins.diagnostics.flake8.with({
+    require("none-ls.diagnostics.flake8").with({
       extra_args = { "--extend-ignore", "E203,E741" },
     }),
     null_ls.builtins.formatting.black.with({
@@ -269,14 +262,6 @@ null_ls.setup({
     null_ls.builtins.formatting.isort,
 
     null_ls.builtins.formatting.goimports,
-    -- Linters too slow for big projects
-    -- null_ls.builtins.diagnostics.staticcheck,
-    -- null_ls.builtins.diagnostics.golangci_lint,
-
-    null_ls.builtins.formatting.fourmolu,
-    null_ls.builtins.formatting.cabal_fmt,
-
-    null_ls.builtins.formatting.taplo,
 
     null_ls.builtins.formatting.ocamlformat,
   },
