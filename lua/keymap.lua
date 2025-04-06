@@ -82,22 +82,6 @@ M.keymaps = {
     rhs = '"*P',
     desc = "`P` with `*` register",
   },
-  {
-    mode = "n",
-    lhs = "<leader><leader>yr",
-    rhs = function()
-      vim.fn.setreg("*", vim.fn.expand("%:~:."), "c")
-    end,
-    desc = "Yank relative path to current file into `*` register",
-  },
-  {
-    mode = "n",
-    lhs = "<leader><leader>ya",
-    rhs = function()
-      vim.fn.setreg("*", vim.fn.expand("%:p"), "c")
-    end,
-    desc = "Yank absolute path to current file into `*` register",
-  },
 
   {
     mode = "n",

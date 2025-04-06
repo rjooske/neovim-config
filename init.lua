@@ -439,3 +439,11 @@ local treesj = require("treesj")
 treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
 
 require("flatten").setup({})
+
+vim.api.nvim_create_user_command("YankPathAbsolute", function()
+  vim.fn.setreg("*", vim.fn.expand("%:p"), "c")
+end, { desc = "Yank the absolute path to the current file" })
+
+vim.api.nvim_create_user_command("YankPathRelative", function()
+  vim.fn.setreg("*", vim.fn.expand("%:~:."), "c")
+end, { desc = "Yank the relative path from the cwd to the current file" })
