@@ -200,7 +200,7 @@ lspconfig.jsonls.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.svelte.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.ocamllsp.setup({ on_attach = on_attach, capabilities = capabilities })
 lspconfig.rust_analyzer.setup({
-  settings = { ["rust-analyzer"] = { checkOnSave = { command = "clippy" } } },
+  settings = { ["rust-analyzer"] = { check = { command = "clippy" } } },
   on_attach = on_attach,
   capabilities = capabilities,
 })
