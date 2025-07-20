@@ -97,18 +97,6 @@ M.keymaps = {
   },
 
   {
-    mode = "t",
-    lhs = [[<C-\><Esc>]],
-    rhs = "<Esc>",
-    desc = "<Esc> inside terminal mode",
-  },
-  {
-    mode = "t",
-    lhs = "<Esc>",
-    rhs = [[<C-\><C-n>]],
-    desc = "Leave terminal mode",
-  },
-  {
     mode = { "n", "t" },
     lhs = "<M-h>",
     rhs = "<Cmd>:wincmd h<CR>",
