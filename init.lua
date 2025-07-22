@@ -387,3 +387,20 @@ end, { desc = "Yank the absolute path to the current file" })
 vim.api.nvim_create_user_command("YankPathRelative", function()
   vim.fn.setreg("*", vim.fn.expand("%:~:."), "c")
 end, { desc = "Yank the relative path from the cwd to the current file" })
+
+---@param key string
+---@return string
+local function jump_with_mark(key)
+  if vim.v.count1 > 1 then
+    return "m'" .. vim.v.count1 .. key
+  else
+    return key
+  end
+end
+
+vim.keymap.set({ "n", "x" }, "j", function()
+  return jump_with_mark("j")
+end, { expr = true })
+vim.keymap.set({ "n", "x" }, "k", function()
+  return jump_with_mark("k")
+end, { expr = true })
