@@ -75,7 +75,7 @@ vim.go.mousescroll = "ver:1,hor:1"
 
 vim.g.mapleader = require("keymap").leader
 for _, v in ipairs(require("keymap").keymaps) do
-  local opts = { silent = true, desc = v.desc }
+  local opts = { silent = true, desc = v.desc, expr = v.expr }
   vim.keymap.set(v.mode, v.lhs, v.rhs, opts)
 end
 

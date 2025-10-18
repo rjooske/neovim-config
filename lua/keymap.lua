@@ -5,16 +5,54 @@ local gitsigns = require("gitsigns")
 local snippy_mapping = require("snippy.mapping")
 local telescope_builtin = require("telescope.builtin")
 
+---@param key string
+---@return string
+local function jump_with_mark(key)
+  if vim.v.count1 > 1 then
+    return "m'" .. vim.v.count1 .. key
+  else
+    return key
+  end
+end
+
 M.leader = " "
 
----@class Keymap
+---@class NonExprKeymap
 ---@field mode string | string[]
 ---@field lhs string
 ---@field rhs string | fun()
 ---@field desc string
 
+---@class ExprKeymap
+---@field mode string | string[]
+---@field lhs string
+---@field rhs fun(): string
+---@field desc string
+---@field expr true
+
+---@alias Keymap NonExprKeymap | ExprKeymap
+
 ---@type Keymap[]
 M.keymaps = {
+  {
+    mode = { "n", "x" },
+    lhs = "j",
+    rhs = function()
+      return jump_with_mark("j")
+    end,
+    desc = "Leave a mark when moving down multiple lines at once",
+    expr = true,
+  },
+  {
+    mode = { "n", "x" },
+    lhs = "k",
+    rhs = function()
+      return jump_with_mark("k")
+    end,
+    desc = "Leave a mark when moving up multiple lines at once",
+    expr = true,
+  },
+
   {
     mode = "n",
     lhs = "<leader>w",
