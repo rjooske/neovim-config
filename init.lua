@@ -56,7 +56,7 @@ require("paq")({
   "willothy/flatten.nvim",
 })
 
-local my_augroup = vim.api.nvim_create_augroup("MyAugroup", {})
+local my_augroup = vim.api.nvim_create_augroup("MyAugroup", { clear = true })
 
 require("gruvbox").setup({
   overrides = {
