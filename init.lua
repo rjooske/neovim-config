@@ -119,28 +119,32 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-local function on_attach(client, bufnr)
-  -- Create a mapping local to this buffer
-  local function map(mode, lhs, rhs, opts)
-    opts.buffer = bufnr
-    vim.keymap.set(mode, lhs, rhs, opts)
-  end
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = my_augroup,
+  callback = function(args)
+    for _, v in ipairs(require("keymap").lsp_keymaps) do
+      vim.keymap.set(
+        v.mode,
+        v.lhs,
+        v.rhs,
+        { silent = true, desc = v.desc, expr = v.expr, buffer = args.buf }
+      )
+    end
 
-  if client.server_capabilities.documentSymbolProvider then
-    require("nvim-navic").attach(client, bufnr)
-  end
+    -- Make `gq` work by removing `formatexpr` that gets added automatically
+    vim.bo[args.buf].formatexpr = nil
 
-  -- Make `gq` work by removing `formatexpr` that gets added automatically
-  vim.bo[bufnr].formatexpr = nil
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    assert(client ~= nil, "Failed to get LSP client")
 
-  -- Disable semantic tokens
-  client.server_capabilities.semanticTokensProvider = nil
+    if client.server_capabilities.documentSymbolProvider then
+      require("nvim-navic").attach(client, args.buf)
+    end
 
-  for _, v in ipairs(require("keymap").lsp_keymaps) do
-    local opts = { silent = true, desc = v.desc }
-    map(v.mode, v.lhs, v.rhs, opts)
-  end
-end
+    -- Disable semantic tokens
+    client.server_capabilities.semanticTokensProvider = nil
+  end,
+})
 
 vim.diagnostic.config({
   signs = false,
@@ -152,60 +156,51 @@ vim.diagnostic.config({
   virtual_text = true,
 })
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-local lspconfig = require("lspconfig")
-lspconfig.lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.clangd.setup({
-  filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
-  on_attach = on_attach,
-  capabilities = vim.tbl_extend(
-    "force",
-    capabilities,
-    { offsetEncoding = "utf-8" }
-  ),
+vim.lsp.config("clangd", {
+  cmd = {
+    "clangd",
+    "--clang-tidy",
+    "--background-index",
+    "--offset-encoding=utf-8",
+    -- This is a whitelist of binaries clangd is allowed to run to find where
+    -- the system header files are (e.g. stdio.h, vector.h).
+    -- /opt/homebrew/bin/arm-none-eabi-gcc: Used for raspberry pi pico
+    -- development on macOS.
+    "--query-driver=/opt/homebrew/bin/arm-none-eabi-gcc",
+  },
 })
-lspconfig.pyright.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.ts_ls.setup({
-  on_attach = function(client, bufnr)
-    local twoslash_queries = require("twoslash-queries")
-    twoslash_queries.setup({ multi_line = true, is_enabled = true })
-    twoslash_queries.attach(client, bufnr)
-    on_attach(client, bufnr)
-  end,
-  capabilities = capabilities,
+vim.lsp.config("ts_ls", {
   settings = {
     -- https://github.com/typescript-language-server/typescript-language-server/blob/b224b878652438bcdd639137a6b1d1a6630129e4/docs/configuration.md?plain=1#L187
     completions = { completeFunctionCalls = true },
   },
+  on_attach = function(client, bufnr)
+    local twoslash_queries = require("twoslash-queries")
+    twoslash_queries.setup({ multi_line = true, is_enabled = true })
+    twoslash_queries.attach(client, bufnr)
+  end,
 })
-lspconfig.hls.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.gopls.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.jdtls.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.arduino_language_server.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-  cmd = {
-    "arduino-language-server",
-    "-cli-config",
-    "/Users/rjooske/Library/Arduino15/arduino-cli.yaml",
-  },
-})
-lspconfig.html.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.emmet_language_server.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-lspconfig.cssls.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.jsonls.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.svelte.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.ocamllsp.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.rust_analyzer.setup({
+vim.lsp.config("rust_analyzer", {
   settings = { ["rust-analyzer"] = { check = { command = "clippy" } } },
-  on_attach = on_attach,
-  capabilities = capabilities,
 })
-lspconfig.texlab.setup({ on_attach = on_attach, capabilities = capabilities })
-lspconfig.taplo.setup({ on_attach = on_attach, capabilities = capabilities })
+vim.lsp.enable({
+  "lua_ls",
+  "clangd",
+  "pyright",
+  "ts_ls",
+  "hls",
+  "gopls",
+  "jdtls",
+  "html",
+  "emmet_language_server",
+  "cssls",
+  "jsonls",
+  "svelte",
+  "ocamllsp",
+  "rust_analyzer",
+  "texlab",
+  "taplo",
+})
 
 local eslint_condition = function(utils)
   return utils.root_has_file({
@@ -227,7 +222,6 @@ end
 
 local null_ls = require("null-ls")
 null_ls.setup({
-  on_attach = on_attach,
   sources = {
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.diagnostics.selene.with({
@@ -243,10 +237,12 @@ null_ls.setup({
     require("none-ls.diagnostics.eslint_d").with({
       extra_filetypes = { "svelte" },
       condition = eslint_condition,
+      method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
     }),
     require("none-ls.code_actions.eslint_d").with({
       extra_filetypes = { "svelte" },
       condition = eslint_condition,
+      method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
     }),
 
     null_ls.builtins.formatting.prettierd.with({
