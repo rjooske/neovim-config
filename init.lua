@@ -378,10 +378,81 @@ treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
 
 require("flatten").setup({})
 
+---@param s string
+local function print_error(s)
+  vim.api.nvim_echo({ { s } }, true, { err = true })
+end
+
+---@return string | nil
+local function get_current_file_relative_path()
+  if vim.api.nvim_get_option_value("buftype", { scope = "local" }) == "" then
+    return vim.fn.expand("%:~:.")
+  end
+end
+
 vim.api.nvim_create_user_command("YankPathAbsolute", function()
   vim.fn.setreg("*", vim.fn.expand("%:p"), "c")
 end, { desc = "Yank the absolute path to the current file" })
 
 vim.api.nvim_create_user_command("YankPathRelative", function()
-  vim.fn.setreg("*", vim.fn.expand("%:~:."), "c")
+  local path = get_current_file_relative_path()
+  if path == nil then
+    print_error("The current buffer is not a file")
+    return
+  end
+  vim.fn.setreg("*", get_current_file_relative_path(), "c")
 end, { desc = "Yank the relative path from the cwd to the current file" })
+
+vim.api.nvim_create_user_command("Rename", function(event)
+  local old_path = get_current_file_relative_path()
+  if old_path == nil then
+    print_error("The current buffer is not a file")
+    return
+  end
+  local new_name = event.fargs[1]
+  local new_path = vim.fs.joinpath(vim.fs.dirname(old_path), new_name)
+  if vim.uv.fs_stat(new_path) ~= nil then
+    print_error('File "' .. new_path .. '" already exists')
+    return
+  end
+
+  local old_path_abs = vim.fn.fnamemodify(old_path, ":p")
+  local new_path_abs = vim.fn.fnamemodify(new_path, ":p")
+  local old_uri = vim.uri_from_fname(old_path_abs)
+  local new_uri = vim.uri_from_fname(new_path_abs)
+
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  for _, client in ipairs(clients) do
+    if client:supports_method("workspace/willRenameFiles") then
+      local resp = client:request_sync("workspace/willRenameFiles", {
+        files = { { oldUri = old_uri, newUri = new_uri } },
+      }, 1000, 0)
+      if resp and resp.result then
+        vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
+      end
+    end
+  end
+
+  if vim.api.nvim_get_option_value("modified", { buf = 0 }) then
+    vim.cmd.w()
+  end
+
+  local old_bufnr = vim.api.nvim_get_current_buf()
+  vim.cmd.exe({ args = { [["norm! \<C-^>"]] } })
+  local _, error = vim.uv.fs_rename(old_path, new_path)
+  if error ~= nil then
+    vim.cmd.exe({ args = { [["norm! \<C-^>"]] } })
+    print_error("Failed to rename: " .. error)
+    return
+  end
+  vim.cmd.e({ args = { new_path } })
+  vim.api.nvim_buf_delete(old_bufnr, { force = true })
+
+  for _, client in ipairs(clients) do
+    if client:supports_method("workspace/didRenameFiles") then
+      client:notify("workspace/didRenameFiles", {
+        files = { { oldUri = old_uri, newUri = new_uri } },
+      })
+    end
+  end
+end, { nargs = 1, desc = "Rename the current file" })
