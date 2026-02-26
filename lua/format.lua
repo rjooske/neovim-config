@@ -5,8 +5,6 @@ local M = {}
 local function filetype_to_formatter_name(filetype)
   if filetype == "rust" then
     return "rust_analyzer"
-  elseif filetype == "svelte" then
-    return "svelte"
   else
     return "null-ls"
   end

@@ -89,6 +89,8 @@ end)
 for k, v in pairs(require("style").opt) do
   vim.opt[k] = v
 end
+vim.opt.diffopt:append("vertical")
+vim.opt.formatoptions:append("mB")
 
 vim.api.nvim_create_autocmd("BufWinEnter", {
   group = my_augroup,
@@ -246,7 +248,7 @@ null_ls.setup({
     }),
 
     null_ls.builtins.formatting.prettierd.with({
-      extra_filetypes = { "svelte" },
+      extra_filetypes = { "svelte", "htmldjango" },
     }),
 
     require("none-ls.diagnostics.flake8").with({

@@ -98,7 +98,7 @@ M.setup = function()
     sources = cmp.config.sources({
       { name = "snippy" },
       { name = "nvim_lsp" },
-    }, { source_all_buffers }),
+    }),
     -- Select the first entry automatically
     completion = { completeopt = "menu,menuone,noinsert" },
     -- Ignore preselect requests from language servers
