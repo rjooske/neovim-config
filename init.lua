@@ -42,6 +42,7 @@ require("paq")({
   -- Bling
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
     build = function()
       vim.cmd("TSUpdate")
     end,
@@ -265,42 +266,46 @@ null_ls.setup({
   },
 })
 
-require("nvim-treesitter.configs").setup({
-  ensure_installed = "all",
-  sync_install = false,
-  highlight = {
-    enable = true,
-    disable = function(_, buf)
-      local max_filesize = 1 * 1024 * 1024 -- 1MB
-      local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > max_filesize then
-        return true
-      end
-    end,
-    additional_vim_regex_highlighting = false,
-  },
-  indent = { enable = true, disable = { "python" } },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "<Plug>TreesitterSelectMore",
-      node_incremental = "<Plug>TreesitterSelectMore",
-      node_decremental = "<Plug>TreesitterSelectLess",
-    },
-  },
-})
+local max_filesize_mb = 1
+local max_filesize_b = max_filesize_mb * 1000 * 1000
 
-vim.keymap.set({ "n", "x" }, "<CR>", function()
+require("nvim-treesitter").install({
+  "html",
+  "css",
+  "scss",
+  "javascript",
+  "typescript",
+  "jsx",
+  "tsx",
+  "svelte",
+})
+vim.api.nvim_create_autocmd("FileType", {
+  group = my_augroup,
+  callback = function(args)
+    local ft = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
+    local lang = vim.treesitter.language.get_lang(ft)
+    if not (lang ~= nil and vim.treesitter.language.add(lang)) then
+      return
+    end
+    local ok, stat = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(args.buf))
+    if ok and stat ~= nil and stat.size > max_filesize_b then
+      return
+    end
+    vim.treesitter.start(args.buf, lang)
+  end,
+})
+vim.treesitter.language.register("bash", { "sh", "zsh" })
+vim.treesitter.language.register("jsonc", "json")
+
+vim.keymap.set("n", "<CR>", function()
   if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "" then
-    return "<Plug>TreesitterSelectMore"
+    return "van"
   else
     return "<CR>"
   end
-end, { expr = true })
-vim.keymap.set("x", "<S-CR>", "<Plug>TreesitterSelectLess")
-
-vim.treesitter.language.register("bash", { "sh", "zsh" })
-vim.treesitter.language.register("jsonc", "json")
+end, { expr = true, remap = true })
+vim.keymap.set("x", "<CR>", "an", { remap = true })
+vim.keymap.set("x", "<S-CR>", "in", { remap = true })
 
 require("dressing").setup({
   input = { insert_only = false, win_options = { winblend = 0 } },
@@ -330,8 +335,7 @@ telescope.setup({
       },
     },
     path_display = { "truncate" },
-    -- layout_strategy = "vertical",
-    preview = { filesize_limit = 1 }, -- 1 MB
+    preview = { filesize_limit = max_filesize_mb },
   },
   pickers = {
     find_files = { follow = true, hidden = true },
