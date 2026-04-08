@@ -524,6 +524,14 @@ M.lsp_keymaps = {
     rhs = vim.lsp.buf.clear_references,
     desc = "Clear word highlights",
   },
+  {
+    mode = "n",
+    lhs = "<Leader>lR",
+    rhs = function()
+      vim.cmd("LspRestart")
+    end,
+    desc = "Restart all language servers",
+  },
 }
 
 return M
