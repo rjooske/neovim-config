@@ -528,7 +528,7 @@ M.lsp_keymaps = {
     mode = "n",
     lhs = "<Leader>lR",
     rhs = function()
-      vim.cmd("LspRestart")
+      vim.cmd("lsp restart")
     end,
     desc = "Restart all language servers",
   },
