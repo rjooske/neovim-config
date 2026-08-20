@@ -275,16 +275,7 @@ null_ls.setup({
 local max_filesize_mb = 1
 local max_filesize_b = max_filesize_mb * 1000 * 1000
 
-require("nvim-treesitter").install({
-  "html",
-  "css",
-  "scss",
-  "javascript",
-  "typescript",
-  "jsx",
-  "tsx",
-  "svelte",
-})
+require("nvim-treesitter").install({ "stable", "unstable" })
 vim.api.nvim_create_autocmd("FileType", {
   group = my_augroup,
   callback = function(args)
@@ -300,8 +291,7 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.treesitter.start(args.buf, lang)
   end,
 })
-vim.treesitter.language.register("bash", { "sh", "zsh" })
-vim.treesitter.language.register("jsonc", "json")
+vim.treesitter.language.register("bash", "sh")
 
 vim.keymap.set("n", "<CR>", function()
   if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "" then
