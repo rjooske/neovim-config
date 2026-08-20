@@ -99,26 +99,26 @@ M.keymaps = {
   {
     mode = { "n", "x" },
     lhs = "<leader>y",
-    rhs = '"*y',
-    desc = "`y` with `*` register",
+    rhs = '"+y',
+    desc = "`y` with `+` register",
   },
   {
     mode = { "n", "x" },
     lhs = "<leader>Y",
-    rhs = '"*Y',
-    desc = "`Y` with `*` register",
+    rhs = '"+Y',
+    desc = "`Y` with `+` register",
   },
   {
     mode = { "n", "x" },
     lhs = "<leader>p",
-    rhs = '"*p',
-    desc = "`p` with `*` register",
+    rhs = '"+p',
+    desc = "`p` with `+` register",
   },
   {
     mode = { "n", "x" },
     lhs = "<leader>P",
-    rhs = '"*P',
-    desc = "`P` with `*` register",
+    rhs = '"+P',
+    desc = "`P` with `+` register",
   },
 
   {
