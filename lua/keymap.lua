@@ -15,6 +15,21 @@ local function jump_with_mark(key)
   end
 end
 
+---Gitsigns acts on the whole hunk unless handed an explicit line range, so pass
+---the selection when called from visual mode.
+---@param f fun(range?: [integer, integer])
+---@return fun()
+local function on_hunk_or_selection(f)
+  return function()
+    local mode = vim.fn.mode()
+    if mode == "v" or mode == "V" then
+      f({ vim.fn.line("."), vim.fn.line("v") })
+    else
+      f()
+    end
+  end
+end
+
 M.leader = " "
 
 ---@class NonExprKeymap
@@ -355,16 +370,32 @@ M.keymaps = {
   },
 
   {
-    mode = "n",
+    mode = { "n", "x" },
     lhs = "[h",
-    rhs = gitsigns.prev_hunk,
+    rhs = function()
+      gitsigns.nav_hunk("prev")
+    end,
     desc = "Previous hunk (Gitsigns)",
   },
   {
-    mode = "n",
+    mode = { "n", "x" },
     lhs = "]h",
-    rhs = gitsigns.next_hunk,
+    rhs = function()
+      gitsigns.nav_hunk("next")
+    end,
     desc = "Next hunk (Gitsigns)",
+  },
+  {
+    mode = { "n", "x" },
+    lhs = "<Leader>hs",
+    rhs = on_hunk_or_selection(gitsigns.stage_hunk),
+    desc = "Stage or unstage hunk (Gitsigns)",
+  },
+  {
+    mode = { "n", "x" },
+    lhs = "<Leader>hr",
+    rhs = on_hunk_or_selection(gitsigns.reset_hunk),
+    desc = "Reset hunk (Gitsigns)",
   },
 
   {
