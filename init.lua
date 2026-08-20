@@ -197,7 +197,8 @@ vim.lsp.enable({
   "gopls",
   "jdtls",
   "html",
-  "emmet_language_server",
+  -- Disabled temporarily, keeps crashing the svelte language server
+  -- "emmet_language_server",
   "cssls",
   "jsonls",
   "svelte",
