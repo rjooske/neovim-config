@@ -159,6 +159,8 @@ vim.diagnostic.config({
   virtual_text = true,
 })
 
+vim.filetype.add({ extension = { service = "systemd" } })
+
 vim.lsp.config("clangd", {
   cmd = {
     "clangd",
