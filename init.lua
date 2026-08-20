@@ -206,6 +206,7 @@ vim.lsp.enable({
   "rust_analyzer",
   "texlab",
   "taplo",
+  "kotlin_language_server",
 })
 
 local eslint_condition = function(utils)
@@ -266,6 +267,8 @@ null_ls.setup({
     null_ls.builtins.formatting.goimports,
 
     null_ls.builtins.formatting.ocamlformat,
+
+    null_ls.builtins.formatting.ktlint,
   },
 })
 
