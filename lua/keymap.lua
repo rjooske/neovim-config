@@ -397,6 +397,12 @@ M.keymaps = {
     rhs = on_hunk_or_selection(gitsigns.reset_hunk),
     desc = "Reset hunk (Gitsigns)",
   },
+  {
+    mode = { "n", "x" },
+    lhs = "<Leader>hp",
+    rhs = on_hunk_or_selection(gitsigns.preview_hunk_inline),
+    desc = "Preview hunk inline (Gitsigns)",
+  },
 
   {
     mode = "n",
