@@ -159,8 +159,6 @@ vim.diagnostic.config({
   virtual_text = true,
 })
 
-vim.filetype.add({ extension = { service = "systemd" } })
-
 vim.lsp.config("clangd", {
   cmd = {
     "clangd",
@@ -292,6 +290,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 vim.treesitter.language.register("bash", "sh")
+vim.filetype.add({ extension = { service = "systemd", timer = "systemd" } })
 
 vim.keymap.set("n", "<CR>", function()
   if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "" then
