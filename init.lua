@@ -205,6 +205,7 @@ vim.lsp.enable({
   "texlab",
   "taplo",
   "kotlin_language_server",
+  "metals",
 })
 
 local eslint_condition = function(utils)
@@ -267,6 +268,8 @@ null_ls.setup({
     null_ls.builtins.formatting.ocamlformat,
 
     null_ls.builtins.formatting.ktlint,
+
+    null_ls.builtins.formatting.scalafmt,
   },
 })
 
