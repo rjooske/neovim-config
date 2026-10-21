@@ -1,3 +1,5 @@
+vim.opt.runtimepath:prepend("/Users/rjooske/code/not_mine/cmp-nvim-lsp")
+
 require("paq")({
   "savq/paq-nvim",
 
@@ -379,6 +381,10 @@ local treesj = require("treesj")
 treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
 
 require("flatten").setup({})
+
+vim.lsp.commands["rust-analyzer.triggerParameterHints"] = function()
+  -- vim.lsp.buf.signature_help()
+end
 
 ---@param s string
 local function print_error(s)
