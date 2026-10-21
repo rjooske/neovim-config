@@ -557,3 +557,56 @@ vim.api.nvim_create_user_command("Claude", function()
   local bufnr = vim.api.nvim_get_current_buf()
   vim.fn.chansend(vim.bo[bufnr].channel, "claude\n")
 end, { desc = "Start Claude Code in a vertical split" })
+
+-- Neovim scrolls an unfocused terminal's scrollback instead of forwarding the
+-- wheel to its program, and doesn't expose whether the program enabled mouse
+-- tracking. So forward to the 'claude' terminal only, identified by name: a
+-- program without mouse tracking would receive the sequence as literal input.
+-- See docs/terminal-mouse-forwarding.md.
+
+-- SGR mouse encoding of wheel buttons 4-7.
+local wheel_button = { up = 64, down = 65, left = 66, right = 67 }
+
+---@param direction "up" | "down" | "left" | "right"
+---@param key string Returned when the pointer is elsewhere
+local function forward_wheel_to_claude(direction, key)
+  return function()
+    local bufnr = vim.fn.bufnr("^claude$")
+    if bufnr == -1 or vim.bo[bufnr].buftype ~= "terminal" then
+      return key
+    end
+    local pos = vim.fn.getmousepos()
+    if pos.winid == 0 or vim.api.nvim_win_get_buf(pos.winid) ~= bufnr then
+      return key
+    end
+
+    local chan = vim.bo[bufnr].channel
+    if chan == 0 then
+      return ""
+    end
+    vim.fn.chansend(
+      chan,
+      string.format(
+        "\27[<%d;%d;%dM",
+        wheel_button[direction],
+        pos.wincol,
+        pos.winrow
+      )
+    )
+    return ""
+  end
+end
+
+for _, spec in ipairs({
+  { lhs = "<ScrollWheelUp>", direction = "up" },
+  { lhs = "<ScrollWheelDown>", direction = "down" },
+  { lhs = "<ScrollWheelLeft>", direction = "left" },
+  { lhs = "<ScrollWheelRight>", direction = "right" },
+}) do
+  vim.keymap.set(
+    { "n", "i", "x", "t" },
+    spec.lhs,
+    forward_wheel_to_claude(spec.direction, spec.lhs),
+    { expr = true, silent = true }
+  )
+end
