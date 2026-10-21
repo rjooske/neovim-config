@@ -464,3 +464,96 @@ vim.api.nvim_create_user_command("Rename", function(event)
     end
   end
 end, { nargs = 1, desc = "Rename the current file" })
+
+local last_runner_command = ""
+local runner_window_height = 10
+
+---@param cmd string
+local function run_in_runner_terminal(cmd)
+  local original_win = vim.api.nvim_get_current_win()
+
+  local bufnr = vim.fn.bufnr("^runner$")
+  if bufnr ~= -1 then
+    if vim.bo[bufnr].buftype ~= "terminal" then
+      print_error("Buffer 'runner' exists but is not a terminal")
+      return
+    end
+    local chan_info = vim.api.nvim_get_chan_info(vim.bo[bufnr].channel)
+    if chan_info.id == nil or chan_info.exitcode ~= -1 then
+      -- The terminal's job died; wipe it so its name can be reused.
+      vim.api.nvim_buf_delete(bufnr, { force = true })
+      bufnr = -1
+    end
+  end
+
+  if bufnr == -1 then
+    vim.cmd("botright split")
+    vim.api.nvim_win_set_height(0, runner_window_height)
+    vim.cmd.terminal()
+    bufnr = vim.api.nvim_get_current_buf()
+    vim.api.nvim_buf_set_name(bufnr, "runner")
+  elseif vim.fn.bufwinid(bufnr) == -1 then
+    vim.cmd("botright split")
+    vim.api.nvim_win_set_height(0, runner_window_height)
+    vim.api.nvim_win_set_buf(0, bufnr)
+  end
+
+  vim.fn.chansend(vim.bo[bufnr].channel, cmd .. "\n")
+
+  -- Put the cursor on the last line so the window follows the output.
+  local last_line = vim.api.nvim_buf_line_count(bufnr)
+  for _, win in ipairs(vim.fn.win_findbuf(bufnr)) do
+    vim.api.nvim_win_set_cursor(win, { last_line, 0 })
+  end
+
+  if vim.api.nvim_win_is_valid(original_win) then
+    vim.api.nvim_set_current_win(original_win)
+  end
+end
+
+vim.keymap.set("n", "<leader>r", function()
+  local cmd = last_runner_command
+  if cmd == "" then
+    cmd = vim.fn.input("Command: ")
+    if cmd == "" then
+      return
+    end
+  end
+  last_runner_command = cmd
+  run_in_runner_terminal(cmd)
+end, { desc = "Run the command in the 'runner' terminal" })
+
+vim.keymap.set("n", "<leader>R", function()
+  local cmd = vim.fn.input("Command: ", last_runner_command)
+  if cmd == "" then
+    return
+  end
+  last_runner_command = cmd
+  run_in_runner_terminal(cmd)
+end, { desc = "Change and run the command in the 'runner' terminal" })
+
+vim.api.nvim_create_user_command("SvelteServer", function()
+  if vim.fn.bufnr("^server$") ~= -1 then
+    print_error("Buffer 'server' already exists")
+    return
+  end
+
+  vim.cmd.tabnew()
+  vim.cmd.terminal()
+  vim.cmd("keepalt f server")
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.fn.chansend(vim.bo[bufnr].channel, "npm run dev\n")
+end, { desc = "Start the Svelte dev server in a new tab" })
+
+vim.api.nvim_create_user_command("Claude", function()
+  if vim.fn.bufnr("^claude$") ~= -1 then
+    print_error("Buffer 'claude' already exists")
+    return
+  end
+
+  vim.cmd.vsplit()
+  vim.cmd.terminal()
+  vim.cmd("keepalt f claude")
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.fn.chansend(vim.bo[bufnr].channel, "claude\n")
+end, { desc = "Start Claude Code in a vertical split" })
