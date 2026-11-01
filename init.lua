@@ -545,19 +545,6 @@ vim.api.nvim_create_user_command("SvelteServer", function()
   vim.fn.chansend(vim.bo[bufnr].channel, "npm run dev\n")
 end, { desc = "Start the Svelte dev server in a new tab" })
 
-vim.api.nvim_create_user_command("Claude", function()
-  if vim.fn.bufnr("^claude$") ~= -1 then
-    print_error("Buffer 'claude' already exists")
-    return
-  end
-
-  vim.cmd.vsplit()
-  vim.cmd.terminal()
-  vim.cmd("keepalt f claude")
-  local bufnr = vim.api.nvim_get_current_buf()
-  vim.fn.chansend(vim.bo[bufnr].channel, "claude\n")
-end, { desc = "Start Claude Code in a vertical split" })
-
 -- Neovim scrolls an unfocused terminal's scrollback instead of forwarding the
 -- wheel to its program, and doesn't expose whether the program enabled mouse
 -- tracking. So forward to the 'claude' terminal only, identified by name: a
@@ -566,6 +553,20 @@ end, { desc = "Start Claude Code in a vertical split" })
 
 -- SGR mouse encoding of wheel buttons 4-7.
 local wheel_button = { up = 64, down = 65, left = 66, right = 67 }
+
+---@param bufnr integer
+---@param direction "up" | "down" | "left" | "right"
+---@param col integer 1-based, relative to the terminal window
+---@param row integer 1-based, relative to the terminal window
+---@param ticks integer
+local function send_wheel(bufnr, direction, col, row, ticks)
+  local chan = vim.bo[bufnr].channel
+  if chan == 0 or ticks < 1 then
+    return
+  end
+  local seq = string.format("\27[<%d;%d;%dM", wheel_button[direction], col, row)
+  vim.fn.chansend(chan, seq:rep(ticks))
+end
 
 ---@param direction "up" | "down" | "left" | "right"
 ---@param key string Returned when the pointer is elsewhere
@@ -579,21 +580,46 @@ local function forward_wheel_to_claude(direction, key)
     if pos.winid == 0 or vim.api.nvim_win_get_buf(pos.winid) ~= bufnr then
       return key
     end
-
-    local chan = vim.bo[bufnr].channel
-    if chan == 0 then
-      return ""
-    end
-    vim.fn.chansend(
-      chan,
-      string.format(
-        "\27[<%d;%d;%dM",
-        wheel_button[direction],
-        pos.wincol,
-        pos.winrow
-      )
-    )
+    send_wheel(bufnr, direction, pos.wincol, pos.winrow, 1)
     return ""
+  end
+end
+
+-- In the claude buffer's Normal mode, the scroll keys would move Neovim's view
+-- of the scrollback; scroll Claude Code itself instead, one wheel tick per
+-- line. The event is aimed at the window's center, where the transcript is.
+---@param bufnr integer
+local function set_claude_scroll_keymaps(bufnr)
+  ---@param win integer
+  local function half_page(win)
+    return vim.v.count > 0 and vim.v.count or vim.wo[win].scroll
+  end
+  ---@param win integer
+  local function full_page(win)
+    return vim.v.count1 * math.max(vim.api.nvim_win_get_height(win) - 2, 1)
+  end
+  local function line()
+    return vim.v.count1
+  end
+
+  for _, spec in ipairs({
+    { lhs = "<C-d>", direction = "down", lines = half_page },
+    { lhs = "<C-u>", direction = "up", lines = half_page },
+    { lhs = "<C-f>", direction = "down", lines = full_page },
+    { lhs = "<C-b>", direction = "up", lines = full_page },
+    { lhs = "<C-e>", direction = "down", lines = line },
+    { lhs = "<C-y>", direction = "up", lines = line },
+  }) do
+    vim.keymap.set("n", spec.lhs, function()
+      local win = vim.api.nvim_get_current_win()
+      send_wheel(
+        bufnr,
+        spec.direction,
+        math.ceil(vim.api.nvim_win_get_width(win) / 2),
+        math.ceil(vim.api.nvim_win_get_height(win) / 2),
+        spec.lines(win)
+      )
+    end, { buffer = bufnr, desc = "Scroll Claude Code" })
   end
 end
 
@@ -610,3 +636,17 @@ for _, spec in ipairs({
     { expr = true, silent = true }
   )
 end
+
+vim.api.nvim_create_user_command("Claude", function()
+  if vim.fn.bufnr("^claude$") ~= -1 then
+    print_error("Buffer 'claude' already exists")
+    return
+  end
+
+  vim.cmd.vsplit()
+  vim.cmd.terminal()
+  vim.cmd("keepalt f claude")
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.fn.chansend(vim.bo[bufnr].channel, "claude\n")
+  set_claude_scroll_keymaps(bufnr)
+end, { desc = "Start Claude Code in a vertical split" })
