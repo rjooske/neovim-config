@@ -208,6 +208,7 @@ vim.lsp.enable({
   "taplo",
   "kotlin_language_server",
   "metals",
+  "tinymist",
 })
 
 -- jdtls doesn't resync its Gradle classpath on restart, so dependency changes
@@ -287,6 +288,8 @@ null_ls.setup({
     null_ls.builtins.formatting.ktlint,
 
     null_ls.builtins.formatting.scalafmt,
+
+    null_ls.builtins.formatting.typstyle,
   },
 })
 
