@@ -210,6 +210,21 @@ vim.lsp.enable({
   "metals",
 })
 
+-- jdtls doesn't resync its Gradle classpath on restart, so dependency changes
+-- stay invisible to it until this is run.
+vim.api.nvim_create_user_command("JdtUpdateConfig", function()
+  local clients = vim.lsp.get_clients({ name = "jdtls" })
+  if #clients == 0 then
+    vim.notify("jdtls is not running", vim.log.levels.WARN)
+    return
+  end
+  for _, client in ipairs(clients) do
+    client:notify("java/projectConfigurationUpdate", {
+      uri = vim.uri_from_fname(client.root_dir),
+    })
+  end
+end, {})
+
 local eslint_condition = function(utils)
   return utils.root_has_file({
     -- https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file
