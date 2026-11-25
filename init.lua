@@ -72,6 +72,11 @@ vim.pack.add({
   "https://github.com/willothy/flatten.nvim",
 })
 
+-- Early, so a nested nvim hands off its files before loading the rest.
+require("flatten").setup({})
+
+vim.g.mapleader = " "
+
 vim.o.background = "dark"
 vim.o.number = true
 vim.o.relativenumber = true
@@ -99,6 +104,11 @@ vim.o.backupcopy = "yes"
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
 
+local max_filesize_mb = 1
+local max_filesize_b = max_filesize_mb * 1000 * 1000
+
+vim.filetype.add({ extension = { service = "systemd", timer = "systemd" } })
+
 require("gruvbox").setup({
   overrides = {
     LspReferenceText = { standout = true },
@@ -108,104 +118,23 @@ require("gruvbox").setup({
 })
 vim.cmd.colorscheme("gruvbox")
 
-vim.g.mapleader = require("keymap").leader
-for _, v in ipairs(require("keymap").keymaps) do
-  local opts = { silent = true, desc = v.desc, expr = v.expr }
-  vim.keymap.set(v.mode, v.lhs, v.rhs, opts)
-end
-
-vim.keymap.set("n", "<Leader>d", function()
-  local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })
-  local filetype = vim.api.nvim_get_option_value("filetype", { buf = 0 })
-  local force = buftype == "terminal" or filetype == "netrw"
-  require("bufdelete").bufdelete(0, force)
-end)
-
----@param tab_size integer
-local function indent_listchars(tab_size)
-  return {
-    tab = "│ ",
-    trail = "-",
-    nbsp = "~",
-    leadmultispace = "│" .. string.rep(" ", tab_size - 1),
-  }
-end
-
-vim.api.nvim_create_autocmd("BufWinEnter", {
-  group = my_augroup,
-  callback = function(event)
-    local buftype =
-      vim.api.nvim_get_option_value("buftype", { buf = event.buf })
-    if buftype ~= "" then
-      return
-    end
-    local opts = require("indent").detect(
-      event.buf,
-      { tab_width = 4, space_widths = { 2, 4 } }
-    )
-    if opts == nil then
-      return
-    end
-    for k, v in pairs(opts) do
-      vim.bo[event.buf][k] = v
-    end
-    vim.opt_local.listchars = indent_listchars(opts.tabstop)
-  end,
-})
-
----@param bufnr integer Must be an explicit number and not 0.
-local function format(bufnr)
-  if #vim.lsp.get_clients({ bufnr = bufnr }) == 0 then
-    return
-  end
-  local formatter = vim.bo[bufnr].filetype == "rust" and "rust_analyzer"
-    or "null-ls"
-  vim.lsp.buf.format({
-    bufnr = bufnr,
-    timeout_ms = 5000,
-    filter = function(client)
-      return client.name == formatter
-    end,
-  })
-end
-
-vim.api.nvim_create_user_command("Format", function()
-  format(vim.api.nvim_get_current_buf())
-end, {})
-
-vim.api.nvim_create_autocmd("BufWritePre", {
+require("nvim-treesitter").install({ "stable", "unstable" })
+vim.api.nvim_create_autocmd("FileType", {
   group = my_augroup,
   callback = function(args)
-    format(args.buf)
+    local ft = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
+    local lang = vim.treesitter.language.get_lang(ft)
+    if not (lang ~= nil and vim.treesitter.language.add(lang)) then
+      return
+    end
+    local ok, stat = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(args.buf))
+    if ok and stat ~= nil and stat.size > max_filesize_b then
+      return
+    end
+    vim.treesitter.start(args.buf, lang)
   end,
 })
-
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = my_augroup,
-  callback = function(args)
-    for _, v in ipairs(require("keymap").lsp_keymaps) do
-      vim.keymap.set(
-        v.mode,
-        v.lhs,
-        v.rhs,
-        { silent = true, desc = v.desc, expr = v.expr, buffer = args.buf }
-      )
-    end
-
-    -- Make `gq` work by removing `formatexpr` that gets added automatically
-    vim.bo[args.buf].formatexpr = nil
-
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    assert(client ~= nil, "Failed to get LSP client")
-
-    if client.server_capabilities.documentSymbolProvider then
-      require("nvim-navic").attach(client, args.buf)
-    end
-
-    -- Disable semantic tokens
-    client.server_capabilities.semanticTokensProvider = nil
-  end,
-})
+vim.treesitter.language.register("bash", "sh")
 
 vim.diagnostic.config({
   signs = false,
@@ -266,6 +195,37 @@ vim.lsp.enable({
   "metals",
   "tinymist",
 })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = my_augroup,
+  callback = function(args)
+    for _, v in ipairs(require("keymap").lsp_keymaps) do
+      vim.keymap.set(
+        v.mode,
+        v.lhs,
+        v.rhs,
+        { silent = true, desc = v.desc, expr = v.expr, buffer = args.buf }
+      )
+    end
+
+    -- Make `gq` work by removing `formatexpr` that gets added automatically
+    vim.bo[args.buf].formatexpr = nil
+
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    assert(client ~= nil, "Failed to get LSP client")
+
+    if client.server_capabilities.documentSymbolProvider then
+      require("nvim-navic").attach(client, args.buf)
+    end
+
+    -- Disable semantic tokens
+    client.server_capabilities.semanticTokensProvider = nil
+  end,
+})
+
+vim.lsp.commands["rust-analyzer.triggerParameterHints"] = function()
+  -- vim.lsp.buf.signature_help()
+end
 
 -- jdtls doesn't resync its Gradle classpath on restart, so dependency changes
 -- stay invisible to it until this is run.
@@ -349,52 +309,34 @@ null_ls.setup({
   },
 })
 
-local max_filesize_mb = 1
-local max_filesize_b = max_filesize_mb * 1000 * 1000
+---@param bufnr integer Must be an explicit number and not 0.
+local function format(bufnr)
+  if #vim.lsp.get_clients({ bufnr = bufnr }) == 0 then
+    return
+  end
+  local formatter = vim.bo[bufnr].filetype == "rust" and "rust_analyzer"
+    or "null-ls"
+  vim.lsp.buf.format({
+    bufnr = bufnr,
+    timeout_ms = 5000,
+    filter = function(client)
+      return client.name == formatter
+    end,
+  })
+end
 
-require("nvim-treesitter").install({ "stable", "unstable" })
-vim.api.nvim_create_autocmd("FileType", {
+vim.api.nvim_create_user_command("Format", function()
+  format(vim.api.nvim_get_current_buf())
+end, {})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
   group = my_augroup,
   callback = function(args)
-    local ft = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
-    local lang = vim.treesitter.language.get_lang(ft)
-    if not (lang ~= nil and vim.treesitter.language.add(lang)) then
-      return
-    end
-    local ok, stat = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(args.buf))
-    if ok and stat ~= nil and stat.size > max_filesize_b then
-      return
-    end
-    vim.treesitter.start(args.buf, lang)
+    format(args.buf)
   end,
 })
-vim.treesitter.language.register("bash", "sh")
-vim.filetype.add({ extension = { service = "systemd", timer = "systemd" } })
 
-vim.keymap.set("n", "<CR>", function()
-  if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "" then
-    return "van"
-  else
-    return "<CR>"
-  end
-end, { expr = true, remap = true })
-vim.keymap.set("x", "<CR>", "an", { remap = true })
-vim.keymap.set("x", "<S-CR>", "in", { remap = true })
-
-require("dressing").setup({
-  input = { insert_only = false, win_options = { winblend = 0 } },
-})
-
-require("Comment").setup({
-  toggler = {
-    line = "<Leader>/",
-    block = "<Leader>?",
-  },
-  opleader = {
-    line = "<Leader>/",
-    block = "<Leader>?",
-  },
-})
+require("completion").setup()
 
 local actions = require("telescope.actions")
 local telescope = require("telescope")
@@ -432,9 +374,27 @@ telescope.setup({
 })
 telescope.load_extension("fzf")
 
+require("gitsigns").setup({ update_debounce = 1000 })
+
+require("Comment").setup({
+  toggler = {
+    line = "<Leader>/",
+    block = "<Leader>?",
+  },
+  opleader = {
+    line = "<Leader>/",
+    block = "<Leader>?",
+  },
+})
+
 require("nvim-surround").setup({})
 
-require("gitsigns").setup({ update_debounce = 1000 })
+local treesj = require("treesj")
+treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
+
+require("dressing").setup({
+  input = { insert_only = false, win_options = { winblend = 0 } },
+})
 
 local palette = require("gruvbox").palette
 local function lualine_mode(bg)
@@ -463,16 +423,59 @@ require("lualine").setup({
   },
 })
 
-require("completion").setup()
-
-local treesj = require("treesj")
-treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
-
-require("flatten").setup({})
-
-vim.lsp.commands["rust-analyzer.triggerParameterHints"] = function()
-  -- vim.lsp.buf.signature_help()
+---@param tab_size integer
+local function indent_listchars(tab_size)
+  return {
+    tab = "│ ",
+    trail = "-",
+    nbsp = "~",
+    leadmultispace = "│" .. string.rep(" ", tab_size - 1),
+  }
 end
+
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  group = my_augroup,
+  callback = function(event)
+    local buftype =
+      vim.api.nvim_get_option_value("buftype", { buf = event.buf })
+    if buftype ~= "" then
+      return
+    end
+    local opts = require("indent").detect(
+      event.buf,
+      { tab_width = 4, space_widths = { 2, 4 } }
+    )
+    if opts == nil then
+      return
+    end
+    for k, v in pairs(opts) do
+      vim.bo[event.buf][k] = v
+    end
+    vim.opt_local.listchars = indent_listchars(opts.tabstop)
+  end,
+})
+
+for _, v in ipairs(require("keymap").keymaps) do
+  local opts = { silent = true, desc = v.desc, expr = v.expr }
+  vim.keymap.set(v.mode, v.lhs, v.rhs, opts)
+end
+
+vim.keymap.set("n", "<Leader>d", function()
+  local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+  local force = buftype == "terminal" or filetype == "netrw"
+  require("bufdelete").bufdelete(0, force)
+end)
+
+vim.keymap.set("n", "<CR>", function()
+  if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "" then
+    return "van"
+  else
+    return "<CR>"
+  end
+end, { expr = true, remap = true })
+vim.keymap.set("x", "<CR>", "an", { remap = true })
+vim.keymap.set("x", "<S-CR>", "in", { remap = true })
 
 ---@param s string
 local function print_error(s)

@@ -29,8 +29,6 @@ local function on_hunk_or_selection(f)
   end
 end
 
-M.leader = " "
-
 ---@class NonExprKeymap
 ---@field mode string | string[]
 ---@field lhs string
