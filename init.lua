@@ -490,7 +490,7 @@ local function get_current_file_relative_path()
 end
 
 vim.api.nvim_create_user_command("YankPathAbsolute", function()
-  vim.fn.setreg("*", vim.fn.expand("%:p"), "c")
+  vim.fn.setreg("+", vim.fn.expand("%:p"), "c")
 end, { desc = "Yank the absolute path to the current file" })
 
 vim.api.nvim_create_user_command("YankPathRelative", function()
@@ -499,7 +499,7 @@ vim.api.nvim_create_user_command("YankPathRelative", function()
     print_error("The current buffer is not a file")
     return
   end
-  vim.fn.setreg("*", get_current_file_relative_path(), "c")
+  vim.fn.setreg("+", get_current_file_relative_path(), "c")
 end, { desc = "Yank the relative path from the cwd to the current file" })
 
 vim.api.nvim_create_user_command("Rename", function(event)
