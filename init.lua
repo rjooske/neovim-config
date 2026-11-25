@@ -153,10 +153,30 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   end,
 })
 
+---@param bufnr integer Must be an explicit number and not 0.
+local function format(bufnr)
+  if #vim.lsp.get_clients({ bufnr = bufnr }) == 0 then
+    return
+  end
+  local formatter = vim.bo[bufnr].filetype == "rust" and "rust_analyzer"
+    or "null-ls"
+  vim.lsp.buf.format({
+    bufnr = bufnr,
+    timeout_ms = 5000,
+    filter = function(client)
+      return client.name == formatter
+    end,
+  })
+end
+
+vim.api.nvim_create_user_command("Format", function()
+  format(vim.api.nvim_get_current_buf())
+end, {})
+
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = my_augroup,
   callback = function(args)
-    require("format").format(args.buf)
+    format(args.buf)
   end,
 })
 

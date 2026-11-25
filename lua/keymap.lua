@@ -1,6 +1,5 @@
 local M = {}
 
-local format = require("format")
 local gitsigns = require("gitsigns")
 local snippy_mapping = require("snippy.mapping")
 local telescope_builtin = require("telescope.builtin")
@@ -538,9 +537,7 @@ M.lsp_keymaps = {
   {
     mode = "n",
     lhs = "<space>lf",
-    rhs = function()
-      format.format(vim.api.nvim_get_current_buf())
-    end,
+    rhs = "<Cmd>Format<CR>",
     desc = "Format",
   },
   {
