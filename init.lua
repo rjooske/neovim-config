@@ -1,65 +1,76 @@
 vim.opt.runtimepath:prepend("/Users/rjooske/code/not_mine/cmp-nvim-lsp")
 
-require("paq")({
-  "savq/paq-nvim",
+local my_augroup = vim.api.nvim_create_augroup("MyAugroup", { clear = true })
 
+-- Must exist before vim.pack.add so it fires for first-time installs.
+vim.api.nvim_create_autocmd("PackChanged", {
+  group = my_augroup,
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == "telescope-fzf-native.nvim" and kind ~= "delete" then
+      vim.system({ "make" }, { cwd = ev.data.path }):wait()
+    elseif name == "nvim-treesitter" and kind == "update" then
+      if not ev.data.active then
+        vim.cmd.packadd("nvim-treesitter")
+      end
+      vim.cmd("TSUpdate")
+    end
+  end,
+})
+
+vim.pack.add({
   -- Common dependencies
-  "nvim-lua/plenary.nvim",
-  "nvim-tree/nvim-web-devicons",
+  "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/nvim-tree/nvim-web-devicons",
 
   -- Language servers
-  "neovim/nvim-lspconfig",
-  "nvimtools/none-ls.nvim",
-  "nvimtools/none-ls-extras.nvim",
+  "https://github.com/neovim/nvim-lspconfig",
+  "https://github.com/nvimtools/none-ls.nvim",
+  "https://github.com/nvimtools/none-ls-extras.nvim",
 
   -- TypeScript
-  "marilari88/twoslash-queries.nvim",
+  "https://github.com/marilari88/twoslash-queries.nvim",
 
   -- Completion
-  "hrsh7th/cmp-nvim-lsp",
-  "hrsh7th/cmp-buffer",
-  "hrsh7th/cmp-path",
-  "hrsh7th/cmp-cmdline",
-  "hrsh7th/nvim-cmp",
-  "dcampos/nvim-snippy",
-  "dcampos/cmp-snippy",
-  "onsails/lspkind.nvim",
+  "https://github.com/hrsh7th/cmp-nvim-lsp",
+  "https://github.com/hrsh7th/cmp-buffer",
+  "https://github.com/hrsh7th/cmp-path",
+  "https://github.com/hrsh7th/cmp-cmdline",
+  "https://github.com/hrsh7th/nvim-cmp",
+  "https://github.com/dcampos/nvim-snippy",
+  "https://github.com/dcampos/cmp-snippy",
+  "https://github.com/onsails/lspkind.nvim",
 
   -- Editing
-  "numToStr/Comment.nvim",
-  "kylechui/nvim-surround",
-  "Wansmer/treesj",
+  "https://github.com/numToStr/Comment.nvim",
+  "https://github.com/kylechui/nvim-surround",
+  "https://github.com/Wansmer/treesj",
 
   -- Telescope
-  "nvim-telescope/telescope.nvim",
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
 
   -- Git
-  "tpope/vim-fugitive",
-  "lewis6991/gitsigns.nvim",
+  "https://github.com/tpope/vim-fugitive",
+  "https://github.com/lewis6991/gitsigns.nvim",
 
   -- Colorscheme
-  "ellisonleao/gruvbox.nvim",
+  "https://github.com/ellisonleao/gruvbox.nvim",
 
   -- Bling
   {
-    "nvim-treesitter/nvim-treesitter",
-    branch = "main",
-    build = function()
-      vim.cmd("TSUpdate")
-    end,
+    src = "https://github.com/nvim-treesitter/nvim-treesitter",
+    version = "main",
   },
-  "SmiteshP/nvim-navic",
-  "stevearc/dressing.nvim",
-  "nvim-lualine/lualine.nvim",
+  "https://github.com/SmiteshP/nvim-navic",
+  "https://github.com/stevearc/dressing.nvim",
+  "https://github.com/nvim-lualine/lualine.nvim",
 
   -- Misc
-  "famiu/bufdelete.nvim",
-  "dstein64/vim-startuptime",
-  "willothy/flatten.nvim",
+  "https://github.com/famiu/bufdelete.nvim",
+  "https://github.com/dstein64/vim-startuptime",
+  "https://github.com/willothy/flatten.nvim",
 })
-
-local my_augroup = vim.api.nvim_create_augroup("MyAugroup", { clear = true })
 
 require("gruvbox").setup({
   overrides = {
