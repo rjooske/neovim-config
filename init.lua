@@ -72,6 +72,33 @@ vim.pack.add({
   "https://github.com/willothy/flatten.nvim",
 })
 
+vim.o.background = "dark"
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.signcolumn = "yes"
+vim.o.cursorline = true
+vim.o.colorcolumn = "80"
+vim.o.list = true
+vim.o.pumheight = 10
+vim.o.showmode = false
+vim.o.laststatus = 3
+vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
+
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.opt.diffopt:append("vertical")
+
+vim.o.expandtab = true
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+vim.opt.formatoptions:append("mB")
+
+vim.o.mousescroll = "ver:1,hor:1"
+vim.o.backupcopy = "yes"
+
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 3
+
 require("gruvbox").setup({
   overrides = {
     LspReferenceText = { standout = true },
@@ -80,12 +107,6 @@ require("gruvbox").setup({
   },
 })
 vim.cmd.colorscheme("gruvbox")
-
-vim.go.backupcopy = "yes"
-
-vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 3
-vim.go.mousescroll = "ver:1,hor:1"
 
 vim.g.mapleader = require("keymap").leader
 for _, v in ipairs(require("keymap").keymaps) do
@@ -100,11 +121,15 @@ vim.keymap.set("n", "<leader>d", function()
   require("bufdelete").bufdelete(0, force)
 end)
 
-for k, v in pairs(require("style").opt) do
-  vim.opt[k] = v
+---@param tab_size integer
+local function indent_listchars(tab_size)
+  return {
+    tab = "│ ",
+    trail = "-",
+    nbsp = "~",
+    leadmultispace = "│" .. string.rep(" ", tab_size - 1),
+  }
 end
-vim.opt.diffopt:append("vertical")
-vim.opt.formatoptions:append("mB")
 
 vim.api.nvim_create_autocmd("BufWinEnter", {
   group = my_augroup,
@@ -124,7 +149,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     for k, v in pairs(opts) do
       vim.bo[event.buf][k] = v
     end
-    vim.opt_local.listchars = require("style").listchars(opts.tabstop)
+    vim.opt_local.listchars = indent_listchars(opts.tabstop)
   end,
 })
 
@@ -391,6 +416,15 @@ require("nvim-surround").setup({})
 
 require("gitsigns").setup({ update_debounce = 1000 })
 
+local palette = require("gruvbox").palette
+local function lualine_mode(bg)
+  return {
+    a = { bg = bg, fg = palette.dark0, gui = "bold" },
+    b = { bg = palette.dark2, fg = palette.light1 },
+    c = { bg = palette.dark1, fg = palette.light4 },
+  }
+end
+
 require("lualine").setup({
   sections = {
     lualine_c = { { "filename", path = 1 } },
@@ -398,13 +432,18 @@ require("lualine").setup({
   options = {
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
-    theme = require("style").lualine_theme,
+    theme = {
+      normal = lualine_mode(palette.light4),
+      insert = lualine_mode(palette.bright_blue),
+      visual = lualine_mode(palette.bright_orange),
+      replace = lualine_mode(palette.bright_red),
+      command = lualine_mode(palette.bright_purple),
+      terminal = lualine_mode(palette.bright_green),
+    },
   },
 })
 
 require("completion").setup()
-
-vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 
 local treesj = require("treesj")
 treesj.setup({ use_default_keymaps = false, max_join_length = math.huge })
