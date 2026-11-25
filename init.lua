@@ -114,7 +114,7 @@ for _, v in ipairs(require("keymap").keymaps) do
   vim.keymap.set(v.mode, v.lhs, v.rhs, opts)
 end
 
-vim.keymap.set("n", "<leader>d", function()
+vim.keymap.set("n", "<Leader>d", function()
   local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })
   local filetype = vim.api.nvim_get_option_value("filetype", { buf = 0 })
   local force = buftype == "terminal" or filetype == "netrw"
@@ -387,12 +387,12 @@ require("dressing").setup({
 
 require("Comment").setup({
   toggler = {
-    line = "<leader>/",
-    block = "<leader>?",
+    line = "<Leader>/",
+    block = "<Leader>?",
   },
   opleader = {
-    line = "<leader>/",
-    block = "<leader>?",
+    line = "<Leader>/",
+    block = "<Leader>?",
   },
 })
 
@@ -415,7 +415,7 @@ telescope.setup({
     find_files = { follow = true, hidden = true },
     live_grep = {
       mappings = {
-        i = { ["<c-space>"] = actions.to_fuzzy_refine },
+        i = { ["<C-Space>"] = actions.to_fuzzy_refine },
       },
     },
     buffers = { mappings = { i = { ["<C-h>"] = actions.delete_buffer } } },
@@ -599,7 +599,7 @@ local function run_in_runner_terminal(cmd)
   end
 end
 
-vim.keymap.set("n", "<leader>r", function()
+vim.keymap.set("n", "<Leader>r", function()
   local cmd = last_runner_command
   if cmd == "" then
     cmd = vim.fn.input("Command: ")
@@ -611,7 +611,7 @@ vim.keymap.set("n", "<leader>r", function()
   run_in_runner_terminal(cmd)
 end, { desc = "Run the command in the 'runner' terminal" })
 
-vim.keymap.set("n", "<leader>R", function()
+vim.keymap.set("n", "<Leader>R", function()
   local cmd = vim.fn.input("Command: ", last_runner_command)
   if cmd == "" then
     return

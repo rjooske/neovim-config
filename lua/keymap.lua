@@ -69,68 +69,68 @@ M.keymaps = {
 
   {
     mode = "n",
-    lhs = "<leader>w",
-    rhs = "<cmd>w<cr>",
+    lhs = "<Leader>w",
+    rhs = "<Cmd>w<CR>",
     desc = "Save",
   },
   {
     mode = "n",
-    lhs = "<leader>W",
-    rhs = "<cmd>noautocmd w<cr>",
+    lhs = "<Leader>W",
+    rhs = "<Cmd>noautocmd w<CR>",
     desc = "Save without formatting",
   },
   {
     mode = "n",
-    lhs = "<leader>q",
-    rhs = "<cmd>close<cr>",
+    lhs = "<Leader>q",
+    rhs = "<Cmd>close<CR>",
     desc = "Close window except last one",
   },
   {
     mode = "n",
-    lhs = "<leader><leader>q",
-    rhs = "<cmd>qa<cr>",
+    lhs = "<Leader><Leader>q",
+    rhs = "<Cmd>qa<CR>",
     desc = "Close all windows",
   },
   {
     mode = "n",
-    lhs = "<leader><leader><leader>q",
-    rhs = "<cmd>cq<cr>",
+    lhs = "<Leader><Leader><Leader>q",
+    rhs = "<Cmd>cq<CR>",
     desc = "Exit with error code",
   },
   {
     mode = "n",
-    lhs = "<esc>",
-    rhs = "<cmd>noh<cr>",
+    lhs = "<Esc>",
+    rhs = "<Cmd>noh<CR>",
     desc = "Clear search highlights",
   },
   {
     mode = "x",
     lhs = "/",
-    rhs = [[<esc>/\%V]],
+    rhs = [[<Esc>/\%V]],
     desc = "Search within visual selection",
   },
 
   {
     mode = { "n", "x" },
-    lhs = "<leader>y",
+    lhs = "<Leader>y",
     rhs = '"+y',
     desc = "`y` with `+` register",
   },
   {
     mode = { "n", "x" },
-    lhs = "<leader>Y",
+    lhs = "<Leader>Y",
     rhs = '"+Y',
     desc = "`Y` with `+` register",
   },
   {
     mode = { "n", "x" },
-    lhs = "<leader>p",
+    lhs = "<Leader>p",
     rhs = '"+p',
     desc = "`p` with `+` register",
   },
   {
     mode = { "n", "x" },
-    lhs = "<leader>P",
+    lhs = "<Leader>P",
     rhs = '"+P',
     desc = "`P` with `+` register",
   },
@@ -176,62 +176,62 @@ M.keymaps = {
   {
     mode = "n",
     lhs = "[t",
-    rhs = "<cmd>tabprevious<cr>",
+    rhs = "<Cmd>tabprevious<CR>",
     desc = "Previous tab page",
   },
   {
     mode = "n",
     lhs = "]t",
-    rhs = "<cmd>tabnext<cr>",
+    rhs = "<Cmd>tabnext<CR>",
     desc = "Next tab page",
   },
   {
     mode = "n",
     lhs = "[T",
-    rhs = "<cmd>tabmove -1<cr>",
+    rhs = "<Cmd>tabmove -1<CR>",
     desc = "Move the tab page to the left",
   },
   {
     mode = "n",
     lhs = "]T",
-    rhs = "<cmd>tabmove +1<cr>",
+    rhs = "<Cmd>tabmove +1<CR>",
     desc = "Move the tab page to the right",
   },
 
   {
     mode = "n",
     lhs = "[q",
-    rhs = "<cmd>cprevious<cr>zz",
+    rhs = "<Cmd>cprevious<CR>zz",
     desc = "Previous quickfix",
   },
   {
     mode = "n",
     lhs = "]q",
-    rhs = "<cmd>cnext<cr>zz",
+    rhs = "<Cmd>cnext<CR>zz",
     desc = "Next quickfix",
   },
   {
     mode = "n",
     lhs = "[Q",
-    rhs = "<cmd>cfirst<cr>zz",
+    rhs = "<Cmd>cfirst<CR>zz",
     desc = "First quickfix",
   },
   {
     mode = "n",
     lhs = "]Q",
-    rhs = "<cmd>clast<cr>zz",
+    rhs = "<Cmd>clast<CR>zz",
     desc = "Last quickfix",
   },
 
   {
     mode = "n",
-    lhs = "<leader>o",
+    lhs = "<Leader>o",
     rhs = telescope_builtin.find_files,
     desc = "Find files (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fo",
+    lhs = "<Leader>fo",
     rhs = function()
       telescope_builtin.oldfiles({ only_cwd = true })
     end,
@@ -239,7 +239,7 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>O",
+    lhs = "<Leader>O",
     rhs = function()
       telescope_builtin.oldfiles({ only_cwd = false })
     end,
@@ -247,43 +247,43 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>b",
+    lhs = "<Leader>b",
     rhs = telescope_builtin.buffers,
     desc = "Find buffers (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fg",
+    lhs = "<Leader>fg",
     rhs = telescope_builtin.live_grep,
     desc = "Live-grep in current directory (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fq",
+    lhs = "<Leader>fq",
     rhs = telescope_builtin.quickfix,
     desc = "Open quickfix (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fh",
+    lhs = "<Leader>fh",
     rhs = telescope_builtin.help_tags,
     desc = "Find help (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fs",
+    lhs = "<Leader>fs",
     rhs = telescope_builtin.current_buffer_fuzzy_find,
     desc = "Find lines in current buffer (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fc",
+    lhs = "<Leader>fc",
     rhs = telescope_builtin.command_history,
     desc = "Find command history (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fk",
+    lhs = "<Leader>fk",
     rhs = function()
       telescope_builtin.keymaps({ show_plug = false })
     end,
@@ -291,19 +291,19 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>gs",
+    lhs = "<Leader>gs",
     rhs = telescope_builtin.git_status,
     desc = "Git status (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fd",
+    lhs = "<Leader>fd",
     rhs = telescope_builtin.diagnostics,
     desc = "Find diagnostics (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fD",
+    lhs = "<Leader>fD",
     rhs = function()
       telescope_builtin.diagnostics({ bufnr = 0 })
     end,
@@ -311,7 +311,7 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>fe",
+    lhs = "<Leader>fe",
     rhs = function()
       telescope_builtin.diagnostics({
         severity_limit = vim.diagnostic.severity.ERROR,
@@ -321,7 +321,7 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>fE",
+    lhs = "<Leader>fE",
     rhs = function()
       telescope_builtin.diagnostics({
         bufnr = 0,
@@ -332,38 +332,38 @@ M.keymaps = {
   },
   {
     mode = "n",
-    lhs = "<leader>fy",
+    lhs = "<Leader>fy",
     rhs = telescope_builtin.lsp_dynamic_workspace_symbols,
     desc = "Query workspace symbols (Telescope)",
   },
   {
     mode = "n",
-    lhs = "<leader>fu",
+    lhs = "<Leader>fu",
     rhs = telescope_builtin.resume,
     desc = "Resume Telescope session (Telescope)",
   },
 
   {
     mode = { "n", "i", "s" },
-    lhs = "<s-tab>",
-    rhs = snippy_mapping.previous("<s-tab>"),
+    lhs = "<S-Tab>",
+    rhs = snippy_mapping.previous("<S-Tab>"),
     desc = "Previous snippet tabstop (Snippy)",
   },
   {
     mode = { "n", "i", "s" },
-    lhs = "<tab>",
-    rhs = snippy_mapping.next("<tab>"),
+    lhs = "<Tab>",
+    rhs = snippy_mapping.next("<Tab>"),
     desc = "Next snippet tabstop (Snippy)",
   },
   {
     mode = "x",
-    lhs = "<tab>",
+    lhs = "<Tab>",
     rhs = snippy_mapping.cut_text,
     desc = "Cut text (Snippy)",
   },
   {
     mode = "n",
-    lhs = "g<tab>",
+    lhs = "g<Tab>",
     rhs = snippy_mapping.cut_text,
     desc = "Cut text (Snippy)",
   },
@@ -434,7 +434,7 @@ end
 M.lsp_keymaps = {
   {
     mode = "i",
-    lhs = "<c-k>",
+    lhs = "<C-k>",
     rhs = vim.lsp.buf.signature_help,
     desc = "Signature help",
   },
@@ -530,19 +530,19 @@ M.lsp_keymaps = {
   },
   {
     mode = "n",
-    lhs = "<space>lr",
+    lhs = "<Leader>lr",
     rhs = vim.lsp.buf.rename,
     desc = "Rename",
   },
   {
     mode = "n",
-    lhs = "<space>lf",
+    lhs = "<Leader>lf",
     rhs = "<Cmd>Format<CR>",
     desc = "Format",
   },
   {
     mode = "n",
-    lhs = "<space>la",
+    lhs = "<Leader>la",
     rhs = vim.lsp.buf.code_action,
     desc = "Code action",
   },
@@ -561,9 +561,7 @@ M.lsp_keymaps = {
   {
     mode = "n",
     lhs = "<Leader>lR",
-    rhs = function()
-      vim.cmd("lsp restart")
-    end,
+    rhs = "<Cmd>lsp restart<CR>",
     desc = "Restart all language servers",
   },
 }
