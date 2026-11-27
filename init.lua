@@ -260,9 +260,19 @@ local eslint_condition = function(utils)
   }) and vim.fs.basename(vim.uv.cwd())
 end
 
+-- none-ls reports an error every time it runs a tool that isn't installed.
+---@param sources any[]
+---@return any[]
+local function installed(sources)
+  return vim.tbl_filter(function(source)
+    local command = source._opts.command
+    return type(command) ~= "string" or vim.fn.executable(command) == 1
+  end, sources)
+end
+
 local null_ls = require("null-ls")
 null_ls.setup({
-  sources = {
+  sources = installed({
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.diagnostics.selene.with({
       condition = function(utils)
@@ -306,7 +316,7 @@ null_ls.setup({
     null_ls.builtins.formatting.scalafmt,
 
     null_ls.builtins.formatting.typstyle,
-  },
+  }),
 })
 
 ---@param bufnr integer Must be an explicit number and not 0.
