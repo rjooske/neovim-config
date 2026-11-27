@@ -1,4 +1,8 @@
-vim.opt.runtimepath:prepend("/Users/rjooske/code/not_mine/cmp-nvim-lsp")
+local is_macos = vim.uv.os_uname().sysname == "Darwin"
+
+if is_macos then
+  vim.opt.runtimepath:prepend("/Users/rjooske/code/not_mine/cmp-nvim-lsp")
+end
 
 local my_augroup = vim.api.nvim_create_augroup("MyAugroup", { clear = true })
 
@@ -118,7 +122,9 @@ require("gruvbox").setup({
 })
 vim.cmd.colorscheme("gruvbox")
 
-require("nvim-treesitter").install({ "stable", "unstable" })
+if is_macos then
+  require("nvim-treesitter").install({ "stable", "unstable" })
+end
 vim.api.nvim_create_autocmd("FileType", {
   group = my_augroup,
   callback = function(args)
