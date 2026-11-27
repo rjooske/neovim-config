@@ -292,7 +292,6 @@ null_ls.setup({
     require("none-ls.code_actions.eslint_d").with({
       extra_filetypes = { "svelte" },
       condition = eslint_condition,
-      method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
     }),
 
     null_ls.builtins.formatting.prettierd.with({
